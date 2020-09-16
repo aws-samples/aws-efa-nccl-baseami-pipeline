@@ -1,0 +1,20 @@
+---
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing additional YUM & Python packages..."
+      - yum -y update && yum -y install unzip curl python3-pip
+      - pip3 install awscli
+      - echo "Installing Packer..."
+      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.1/packer_1.6.1_linux_amd64.zip && unzip packer.zip
+      - cd $CODEBUILD_SRC_DIR/nvidia-efa_base && packer version
+      - echo "Validating packer JSON"
+      - packer validate nvidia-efa-ml-al2.yml
+      - env
+      - echo $HOME
+  build:
+    commands:
+      - echo "Build Phase"
+      - cd $CODEBUILD_SRC_DIR/nvidia-efa_base && packer build nvidia-efa-ml-al2.yml
