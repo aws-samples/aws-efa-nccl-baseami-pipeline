@@ -20,6 +20,7 @@ The docker build files can show an example implentation of the requirements to s
 - NCCL 2.7.8
 - EFA
 - AWS-OFI-NCCL
+- NCCL-tests
 
 ## Packer Instructions
 In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2 and Ubuntu 18.04. Generally you just need to modify the `variables:{}` json and execute the packer build
