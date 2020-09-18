@@ -1,58 +1,73 @@
-FROM nvidia/cuda:10.2-devel
+FROM nvidia/cuda:11.0-devel-ubuntu18.04
 
-ENV USER root
+ARG EFA_INSTALLER_VERSION=latest
+ARG NCCL_VERSION=master
+ARG AWS_OFI_NCCL_VERSION=aws
+ARG NCCL_TESTS_VERSION=v2.0.0
 
-# -------------------------------------------------------------------------------------
-# install needed software -
-# openssh
-# mpi
-# awscli
-# supervisor
-# -------------------------------------------------------------------------------------
+RUN apt-get update -y
+RUN apt-get install -y --allow-unauthenticated \
+    git \
+    gcc \
+    yum-utils \
+    vim \
+    kmod \
+    openssh-client \
+    openssh-server \
+    build-essential \
+    curl \
+    autoconf \
+    libtool \
+    gdb \
+    automake
 
-RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -y unzip iproute2 nano cmake openssh-server openssh-client python3 python3-pip build-essential wget curl pigz && apt clean
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 
-RUN mkdir -p /var/run/sshd
-ENV DEBIAN_FRONTEND noninteractive
+ENV HOME /tmp
 
-ENV NOTVISIBLE "in users profile"
+ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/opt/amazon/openmpi/lib:$HOME/nccl/build/lib:/opt/amazon/efa/lib:/$HOME/aws-ofi-nccl/install/lib:$LD_LIBRARY_PATH
+ENV PATH=/opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:$PATH
 
-#####################################################
-## SSH SETUP
 
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-RUN echo "export VISIBLE=now" >> /etc/profile
+#################################################
+## Install EFA installer
+RUN cd $HOME \
+    && curl -O https://efa-installer.amazonaws.com/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
+    && tar -xf $HOME/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
+    && cd aws-efa-installer \
+    && ./efa_installer.sh -y -d --skip-kmod --skip-limit-conf --no-verify | tee $HOME/install.log
 
-RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-ENV SSHDIR /root/.ssh
-RUN mkdir -p ${SSHDIR} && \
-    touch ${SSHDIR}/sshd_config && \
-    ssh-keygen -t rsa -f ${SSHDIR}/ssh_host_rsa_key -N '' && \
-    cp ${SSHDIR}/ssh_host_rsa_key.pub ${SSHDIR}/authorized_keys && \
-    cp ${SSHDIR}/ssh_host_rsa_key ${SSHDIR}/id_rsa && \
-    echo "    IdentityFile ${SSHDIR}/id_rsa" >> /etc/ssh/ssh_config && \
-    echo "Host *" >> /etc/ssh/ssh_config && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
-    chmod -R 600 ${SSHDIR}/* && \
-    chown -R ${USER}:${USER} ${SSHDIR}/
-# check if ssh agent is running or not, if not, run
-RUN eval `ssh-agent -s` && ssh-add ${SSHDIR}/id_rsa
-
-##################################################
-## CUDA MPI
-
-RUN wget -O /tmp/openmpi.tar.gz https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.gz && \
-    tar -xvf /tmp/openmpi.tar.gz -C /tmp && cd /tmp/openmpi* && ./configure --prefix=/opt/openmpi --with-cuda --enable-mpirun-prefix-by-default && \
-    make -j $(nproc) && make install
-RUN echo "export PATH=$PATH:/opt/openmpi/bin:/usr/local/cuda/bin" >> /etc/profile
-RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/openmpi/lib:/usr/local/cuda/include:/usr/local/cuda/lib64" >> /etc/profile
+## Test EFA installation
+RUN /opt/amazon/efa/bin/fi_info --version
 
 ###################################################
-## APPLICATION LAYER
-RUN /usr/local/cuda/bin/nvcc --version
+## Install NCCL
+RUN git clone https://github.com/NVIDIA/nccl.git $HOME/nccl \
+    && cd $HOME/nccl \
+    && make -j src.build CUDA_HOME=/usr/local/cuda \
+    NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
 
 ###################################################
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D", "-p", "22"]
+## Install AWS-OFI-NCCL plugin
+RUN git clone https://github.com/aws/aws-ofi-nccl.git $HOME/aws-ofi-nccl \
+    && cd $HOME/aws-ofi-nccl \
+    && git checkout ${AWS_OFI_NCCL_VERSION} \
+    && ./autogen.sh \
+    && ./configure --prefix=$HOME/aws-ofi-nccl/install \
+       --with-libfabric=/opt/amazon/efa/ \
+       --with-cuda=/usr/local/cuda \
+       --with-nccl=$HOME/nccl/build \
+       --with-mpi=/opt/amazon/openmpi/ \
+    && make && make install
+
+###################################################
+## Install NCCL-tests
+RUN git clone https://github.com/NVIDIA/nccl-tests.git $HOME/nccl-tests \
+    && cd $HOME/nccl-tests \
+    && git checkout ${NCCL_TESTS_VERSION} \
+    && make MPI=1 \
+       MPI_HOME=/opt/amazon/openmpi/ \
+       CUDA_HOME=/usr/local/cuda \
+       NCCL_HOME=$HOME/nccl/build \
+       NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
+
+CMD echo "EFA Setup Complete! "
