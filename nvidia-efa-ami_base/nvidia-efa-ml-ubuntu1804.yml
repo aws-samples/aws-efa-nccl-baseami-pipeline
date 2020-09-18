@@ -1,0 +1,177 @@
+{
+  "variables": {
+    "region": "us-east-1",
+    "flag": "ubuntu1804-base",
+    "subnet_id": "subnet-5163b237",
+    "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
+    "build_ami": "ami-0ac80df6eff0e70b5",
+    "efa_pkg": "aws-efa-installer-latest.tar.gz",
+    "intel_mkl_version": "intel-mkl-2020.0-088",
+    "cuda_version": "cuda-11-0",
+    "cudnn_version": "libcudnn8"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami": "{{user `build_ami`}}",
+    "run_tags": {
+        "Name": "packer-gpu-processor-{{user `flag`}}"
+    },
+    "subnet_id": "{{user `subnet_id`}}",
+    "security_group_ids": "{{user `security_groupids`}}",
+    "instance_type": "p3dn.24xlarge",
+    "ssh_username": "ubuntu",
+    "ami_name": "ml-gpu-processor_{{user `flag`}}-{{timestamp}}",
+    "launch_block_device_mappings":[{
+      "delete_on_termination": true,
+      "device_name": "/dev/sda1",
+      "volume_size": 100,
+      "volume_type": "gp2"
+    }]
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "expect_disconnect": true,
+    "inline": [
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y git libtool autoconf cmake nasm unzip python3-pip python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc1 libnuma-dev numactl libjemalloc-dev preload ulatency ulatencyd htop iftop liblapack-dev libgfortran3 wget curl dkms",
+      "echo 'GRUB_CMDLINE_LINUX='intel_idle.max_cstate=1'' | sudo tee -a /etc/default/grub",
+      "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
+      "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
+      "uname -r",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-aws lustre-client-modules-aws",
+      "sudo systemctl disable unattended-upgrades.service",
+      "sudo systemctl disable ondemand.service",
+      "sudo ufw disable",
+      "sudo shutdown -r now"]
+    },
+    {
+    "type": "shell",
+    "inline": [
+      "uname -r",
+      "wget -O /tmp/awscli2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
+      "cd /tmp && sudo unzip /tmp/awscli2.zip",
+      "sudo /tmp/aws/install",
+      "aws configure set default.s3.max_concurrent_requests 100",
+      "aws configure set default.s3.max_queue_size 10000",
+      "aws configure set default.s3.multipart_threshold 64MB",
+      "aws configure set default.s3.multipart_chunksize 16MB"]
+    },
+    {
+    "type": "shell",
+    "inline": [
+      "echo 'net.core.default_qdisc = fq' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_congestion_control = bbr' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_timestamps = 0' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.rmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.wmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_rmem = 4096 87380 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_wmem = 4096 65536 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.netdev_max_backlog = 30000' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.rmem_default = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.wmem_default = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_mem = 67108864 67108864 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.route.flush = 1' | sudo tee -a /etc/sysctl.conf",
+      "sudo sysctl -p"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang":"/bin/bash -xe",
+    "inline": [
+      "sudo apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws"]
+    },
+    {
+    "type": "shell",
+    "expect_disconnect": true,
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "echo ****DOWNLOAD ML REPOS****",
+      "sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub",
+      "wget -O /tmp/cuda.pin https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin",
+      "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
+      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub",
+      "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /'",
+      "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
+      "sudo dpkg -i /tmp/deeplearning.deb",
+      "curl -sL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | sudo apt-key add -",
+      "sudo sh -c 'sudo wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list'",
+      "sudo apt update",
+      "echo ****INSTALL CUDA NCCL INTEL-MKL MKLDNN****",
+      "sudo apt install -o Dpkg::Options::='--force-overwrite' {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-dev {{user `intel_mkl_version`}} -y",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
+      "echo -e '#!/bin/sh\nsource /opt/intel/mkl/bin/mklvars.sh intel64' | sudo tee /etc/profile.d/mkl.sh && sudo chmod +x /etc/profile.d/mkl.sh",
+      "wget -O /tmp/onednn.tgz 'https://github.com/oneapi-src/oneDNN/releases/download/v1.5/dnnl_lnx_1.5.0_cpu_iomp.tgz'",
+      "cd /tmp && tar -xvf onednn.tgz && sudo mkdir -p /opt/onednn",
+      "sudo mv /tmp/dnnl*/* /opt/onednn",
+      "sudo modprobe nvidia",
+      "echo ****SET ENVIROMENT****",
+      "echo -e '#!/bin/sh\nMKLDNNROOT=/opt/onednn' | sudo tee /etc/profile.d/onednn.sh",
+      "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 877,1530\n' | sudo tee /etc/rc.local && sudo chmod +x /etc/rc.local"],
+    "pause_before":"20s"
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "wget -O /tmp/aws-efa-installer.tar.gz https://efa-installer.amazonaws.com/{{user `efa_pkg`}}",
+      "tar -xf /tmp/aws-efa-installer.tar.gz -C /tmp",
+      "cd /tmp/aws-efa-installer",
+      "sudo ./efa_installer.sh -y",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/amazon/openmpi/lib:/opt/amazon/efa/lib\nexport PATH=$PATH:/opt/amazon/efa/bin:/opt/amazon/openmpi/bin' | sudo tee /etc/profile.d/amazon_efa.sh && sudo chmod +x /etc/profile.d/amazon_efa.sh"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "cd /opt",
+      "sudo git clone https://github.com/NVIDIA/nccl.git",
+      "cd nccl",
+      "sudo make -j src.build CUDA_HOME=/usr/local/cuda",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/nccl/build/lib' | sudo tee /etc/profile.d/nccl.sh && sudo chmod +x /etc/profile.d/nccl.sh"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/aws/aws-ofi-nccl.git -b aws",
+      "cd aws-ofi-nccl",
+      "export PATH=$PATH:/opt/amazon/efa/bin:/opt/amazon/openmpi/bin",
+      "./autogen.sh",
+      "sudo mkdir -p /opt/aws-ofi-nccl",
+      "./configure --prefix=/opt/aws-ofi-nccl --with-mpi=/opt/amazon/openmpi --with-libfabric=/opt/amazon/efa --with-nccl=/opt/nccl/build --with-cuda=/usr/local/cuda",
+      "make && sudo make install",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/aws-ofi-nccl/lib' | sudo tee /etc/profile.d/aws-ofi-nccl.sh && sudo chmod +x /etc/profile.d/aws-ofi-nccl.sh" ]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/nccl-tests.git",
+      "cd nccl-tests",
+      "make MPI=1 MPI_HOME=/opt/amazon/openmpi CUDA_HOME=/usr/local/cuda NCCL_HOME=/opt/nccl/build"]
+    },    
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "echo '    StrictHostKeyChecking no' | sudo tee -a /etc/ssh/ssh_config",
+      "echo '    HostbasedAuthentication no' | sudo tee -a /etc/ssh/ssh_config",
+      "echo '    CheckHostIP no' | sudo tee -a /etc/ssh/ssh_config",
+      "ssh-keygen -t rsa -q -f \"$HOME/.ssh/id_rsa\" -N ''",
+      "cat $HOME/.ssh/id_rsa.pub | tee -a $HOME/.ssh/authorized_keys"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable'",
+      "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
+      "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -",
+      "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list",
+      "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io nvidia-container-toolkit nvidia-container-runtime",
+      "sudo usermod -aG docker $USER"
+      ]
+    }
+    ]
+}

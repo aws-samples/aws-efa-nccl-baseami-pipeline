@@ -11,10 +11,10 @@ phases:
       - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.1/packer_1.6.1_linux_amd64.zip && unzip packer.zip
       - cd $CODEBUILD_SRC_DIR/nvidia-efa-ami_base && packer version
       - echo "Validating packer JSON"
-      - packer validate nvidia-efa-ml-al2.yml
+      - packer validate nvidia-efa-ml-ubuntu1804.yml
       - env
       - echo $HOME
   build:
     commands:
       - echo "Build Phase"
-      - cd $CODEBUILD_SRC_DIR/nvidia-efa_base && packer build nvidia-efa-ml-al2.yml
+      - cd $CODEBUILD_SRC_DIR/nvidia-efa_base && packer build nvidia-efa-ml-ubuntu1804.yml
