@@ -20,6 +20,21 @@ The docker build files can show an example implentation of the requirements to s
 - EFA
 - AWS-OFI-NCCL
 
+## Packer Instructions
+In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2 and Ubuntu 18.04. Generally you just need to modify the `variables:{}` json and execute the packer build
+````json
+"variables": {
+    "region": "<region>",
+    "flag": "al2-base",
+    "subnet_id": "<subnetid>",
+    "security_groupids": "<security_group_ids_list>",
+    "build_ami": "`<lastest_base_ami_>",
+    "efa_pkg": "aws-efa-installer-latest.tar.gz",
+    "intel_mkl_version": "intel-mkl-2020.0-088",
+    "cuda_version": "cuda-11-0",
+    "cudnn_version": "libcudnn8"
+  },
+```  
 
 ## Security
 
