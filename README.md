@@ -34,7 +34,7 @@ In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2
     "cuda_version": "cuda-11-0",
     "cudnn_version": "libcudnn8"
   },
-```  
+````  
 
 ## Security
 
