@@ -36,6 +36,11 @@ In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2
     "cudnn_version": "libcudnn8"
   },
 ````  
+After filling in the `variables` check that the packer script is validated and run.
+````
+packer validate nvidia-efa-ml-al2.yml
+packer build nvidia-efa-ml-al2.yml
+````
 
 ## Security
 
