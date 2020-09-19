@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.0-devel-ubuntu18.04
+FROM nvcr.io/nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
 
 ARG EFA_INSTALLER_VERSION=latest
 ARG NCCL_VERSION=master
