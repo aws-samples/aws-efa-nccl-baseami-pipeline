@@ -24,7 +24,7 @@ RUN apt-get install -y --allow-unauthenticated \
 
 ENV HOME /tmp
 
-ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/opt/amazon/openmpi/lib:$HOME/nccl/build/lib:/opt/amazon/efa/lib:/$HOME/aws-ofi-nccl/install/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/opt/amazon/openmpi/lib:/opt/nccl/build/lib:/opt/amazon/efa/lib:/opt/aws-ofi-nccl/install/lib:$LD_LIBRARY_PATH
 ENV PATH=/opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:$PATH
 
 
@@ -41,21 +41,21 @@ RUN /opt/amazon/efa/bin/fi_info --version
 
 ###################################################
 ## Install NCCL
-RUN git clone https://github.com/NVIDIA/nccl.git $HOME/nccl \
-    && cd $HOME/nccl \
+RUN git clone https://github.com/NVIDIA/nccl.git /opt/nccl \
+    && cd /opt/nccl \
     && make -j src.build CUDA_HOME=/usr/local/cuda \
     NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
 
 ###################################################
 ## Install AWS-OFI-NCCL plugin
-RUN git clone https://github.com/aws/aws-ofi-nccl.git $HOME/aws-ofi-nccl \
-    && cd $HOME/aws-ofi-nccl \
+RUN git clone https://github.com/aws/aws-ofi-nccl.git /opt/aws-ofi-nccl \
+    && cd /opt/aws-ofi-nccl \
     && git checkout ${AWS_OFI_NCCL_VERSION} \
     && ./autogen.sh \
-    && ./configure --prefix=$HOME/aws-ofi-nccl/install \
+    && ./configure --prefix=/opt/aws-ofi-nccl/install \
        --with-libfabric=/opt/amazon/efa/ \
        --with-cuda=/usr/local/cuda \
-       --with-nccl=$HOME/nccl/build \
+       --with-nccl=/opt/nccl/build \
        --with-mpi=/opt/amazon/openmpi/ \
     && make && make install
 
@@ -67,7 +67,7 @@ RUN git clone https://github.com/NVIDIA/nccl-tests.git $HOME/nccl-tests \
     && make MPI=1 \
        MPI_HOME=/opt/amazon/openmpi/ \
        CUDA_HOME=/usr/local/cuda \
-       NCCL_HOME=$HOME/nccl/build \
+       NCCL_HOME=/opt/nccl/build \
        NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
 
 CMD echo "EFA Setup Complete! "
