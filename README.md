@@ -1,4 +1,4 @@
-## AWS EFA and NCCL Base AMI Build Pipeline
+## AWS EFA and NCCL Base AMI/Docker Build Pipeline
 The base EFA/NCCL Base AMI can help you quickly get started with running distributed training workloads on AWS with our EFA enabled instances (p3dn, etc).
 Included are sample buildspecs which you integrate with a CodeBuild/CodePipeline for automatic builds.
 These scripts can be used as examples for both AL2 and Ubuntu 18.04 the following stack is installed. The docker build file is an example implentation of the requirements to setup EFA/NCCL in a container context for ECS/Batch/EKS.
