@@ -35,7 +35,7 @@
     "inline": [
       "sudo  yum update -y",
       "sudo amazon-linux-extras install lustre2.10 epel -y",
-      "sudo yum install cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
+      "sudo yum install yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
       "sudo mkdir /fsx",
@@ -142,6 +142,15 @@
       "sudo wget -O /tmp/nvidia-machine-learning-repo.rpm https://developer.download.nvidia.com/compute/machine-learning/repos/rhel7/x86_64/nvidia-machine-learning-repo-rhel7-1.0.0-1.x86_64.rpm",
       "sudo rpm -i /tmp/nvidia-machine-learning-repo.rpm",
       "sudo yum install {{user `cudnn_version`}} {{user `cudnn_version`}}-devel -y"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo",
+      "sudo yum install docker-ce docker-ce-cli containerd.io",
+      "sudo usermod -aG docker ec2-user",
+      "sudo systemctl enable docker"]
     }
   ]
 }
