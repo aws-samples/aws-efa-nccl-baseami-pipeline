@@ -17,4 +17,4 @@ phases:
   build:
     commands:
       - echo "Build Phase"
-      - cd $CODEBUILD_SRC_DIR/nvidia-efa_base && packer build nvidia-efa-ml-ubuntu1804.yml
+      - cd $CODEBUILD_SRC_DIR/nvidia-efa-ami_base && packer build nvidia-efa-ml-ubuntu1804.yml
