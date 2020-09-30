@@ -21,6 +21,8 @@ RUN apt-get install -y --allow-unauthenticated \
     gdb \
     automake
 
+## Remove existing ibverbs
+RUN apt-get purge -y libmlx5-1 ibverbs-utils libibverbs-dev libibverbs1
 
 ENV HOME /tmp
 
