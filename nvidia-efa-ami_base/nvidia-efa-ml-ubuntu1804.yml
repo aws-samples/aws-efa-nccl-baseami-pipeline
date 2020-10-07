@@ -19,7 +19,7 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "instance_type": "p3dn.24xlarge",
+    "instance_type": "p3.2xlarge",
     "ssh_username": "ubuntu",
     "ami_name": "ml-gpu-processor_{{user `flag`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
