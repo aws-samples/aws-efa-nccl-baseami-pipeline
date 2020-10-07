@@ -5,6 +5,7 @@ These scripts can be used as examples for both AL2 and Ubuntu 18.04 the followin
 
 - NVIDIA Driver 450.xx
 - CUDA 11
+- NVIDIA Fabric Manager
 - cuDNN 8
 - NCCL 2.7.8
 - EFA latest driver
