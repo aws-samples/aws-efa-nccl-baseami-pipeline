@@ -7,7 +7,7 @@
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "cuda_version": "cuda-11-0",
+    "cuda_version": "cuda-drivers-450",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
@@ -87,12 +87,12 @@
     "inline": [
       "echo ****DOWNLOAD ML REPOS****",
       "sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub",
+      "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
+      "sudo dpkg -i /tmp/deeplearning.deb",
       "wget -O /tmp/cuda.pin https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin",
       "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
       "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub",
       "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /'",
-      "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
-      "sudo dpkg -i /tmp/deeplearning.deb",
       "curl -sL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | sudo apt-key add -",
       "sudo sh -c 'sudo wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list'",
       "sudo apt update",
