@@ -7,7 +7,7 @@
     "build_ami": "ami-02354e95b39ca8dec",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "cuda_version": "cuda-11-0",
+    "cuda_version": "cuda-drivers-450 cuda-toolkit-11-0",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
@@ -75,10 +75,10 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "sudo yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
+      "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/machine-learning/repos/rhel7/x86_64/nvidia-machine-learning-repo-rhel7-1.0.0-1.x86_64.rpm",
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
       "sudo yum clean all",
-      "sudo yum -y install nvidia-driver-latest-dkms cuda",
-      "sudo yum -y install cuda-drivers",
+      "sudo yum -y install nvidia-fabricmanager-450 {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 877,1530\n' | sudo tee /etc/rc.local",
       "echo -e 'echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo\n' | sudo tee -a /etc/rc.local",
