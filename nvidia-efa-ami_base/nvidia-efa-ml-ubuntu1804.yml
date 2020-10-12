@@ -106,7 +106,7 @@
       "sudo modprobe nvidia",
       "echo ****SET ENVIROMENT****",
       "echo -e '#!/bin/sh\nMKLDNNROOT=/opt/onednn' | sudo tee /etc/profile.d/onednn.sh",
-      "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 877,1530\n' | sudo tee /etc/rc.local && sudo chmod +x /etc/rc.local",
+      "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 1215, 1410\n' | sudo tee /etc/rc.local && sudo chmod +x /etc/rc.local",
       "sudo systemctl enable nvidia-fabricmanager.service"],
     "pause_before":"20s"
     },
