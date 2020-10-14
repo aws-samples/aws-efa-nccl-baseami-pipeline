@@ -84,6 +84,7 @@
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 1215,1410\n' | sudo tee /etc/rc.local",
       "echo -e 'echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo\n' | sudo tee -a /etc/rc.local",
+      "sudo systemctl enable nvidia-fabricmanager",
       "sudo chmod +x /etc/rc.local"]
     },
     {
