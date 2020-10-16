@@ -94,6 +94,7 @@
       "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
       "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo",
       "sudo yum install -y nvidia-container-toolkit nvidia-docker2",
+      "echo -e '{\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",      
       "sudo systemctl restart docker",
       "sudo usermod -aG docker ec2-user"]
     },
