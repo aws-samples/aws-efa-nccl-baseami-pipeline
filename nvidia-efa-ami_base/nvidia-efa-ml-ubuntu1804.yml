@@ -34,7 +34,7 @@
     "expect_disconnect": true,
     "inline": [
       "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y",
-      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y git libtool autoconf cmake nasm unzip python3-pip python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc1 libnuma-dev numactl libjemalloc-dev preload ulatency ulatencyd htop iftop liblapack-dev libgfortran3 wget curl dkms",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y git libtool autoconf cmake nasm unzip python3-pip python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc1 libnuma-dev numactl libjemalloc-dev preload ulatency ulatencyd htop iftop liblapack-dev libgfortran3 ipcalc wget curl dkms",
       "echo 'GRUB_CMDLINE_LINUX='intel_idle.max_cstate=1'' | sudo tee -a /etc/default/grub",
       "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
       "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
