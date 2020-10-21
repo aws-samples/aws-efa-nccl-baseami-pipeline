@@ -12,7 +12,7 @@ These scripts can be used as examples for both AL2 and Ubuntu 18.04 the followin
 - AWS-OFI-NCCL 
 - FSx kernel and client driver and utilities
 - Intel OneDNN
-- Docker
+- NVIDIA runtime Docker
 
 ## Packer Instructions
 In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2 and Ubuntu 18.04. Generally you just need to modify the `variables:{}` json and execute the packer build
