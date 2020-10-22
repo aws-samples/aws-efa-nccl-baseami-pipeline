@@ -173,6 +173,13 @@
       "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io nvidia-container-toolkit nvidia-container-runtime",
       "echo -e '{\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"/usr/bin/nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",      "sudo usermod -aG docker $USER"
       ]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "wget -O /tmp/aws-ubuntu-eni-helper.deb 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/aws-ubuntu-eni-helper_0.2-1_all.deb'",
+      "sudo apt install /tmp/aws-ubuntu-eni-helper.deb -y"]
     }
     ]
 }
