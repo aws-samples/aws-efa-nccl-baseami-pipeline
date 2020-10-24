@@ -105,7 +105,7 @@
       "wget -O /tmp/aws-efa-installer.tar.gz https://efa-installer.amazonaws.com/{{user `efa_pkg`}}",
       "tar -xf /tmp/aws-efa-installer.tar.gz -C /tmp",
       "cd /tmp/aws-efa-installer",
-      "sudo ./efa_installer.sh -y",
+      "sudo ./efa_installer.sh -y -g",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/amazon/openmpi/lib64:/opt/amazon/efa/lib64\nexport PATH=$PATH:/opt/amazon/efa/bin:/opt/amazon/openmpi/bin' | sudo tee /etc/profile.d/amazon_efa.sh"]
     },
     {
