@@ -80,7 +80,7 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "echo ****DOWNLOAD ML REPOS****",
-      "sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-headers-$(uname -r)",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-headers-$(uname -r) linux-headers-5.4.0-1028-aws",
       "sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub",
       "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
       "sudo dpkg -i /tmp/deeplearning.deb",
