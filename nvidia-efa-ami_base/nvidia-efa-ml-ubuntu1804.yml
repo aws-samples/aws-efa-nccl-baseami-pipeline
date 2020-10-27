@@ -38,7 +38,7 @@
       "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
       "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
       "uname -r",
-      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-aws lustre-client-modules-aws",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws",
       "sudo systemctl disable unattended-upgrades.service",
       "sudo systemctl disable ondemand.service",
       "sudo ufw disable",
@@ -72,12 +72,6 @@
       "echo 'net.ipv4.tcp_mem = 67108864 67108864 67108864' | sudo tee -a /etc/sysctl.conf",
       "echo 'net.ipv4.route.flush = 1' | sudo tee -a /etc/sysctl.conf",
       "sudo sysctl -p"]
-    },
-    {
-    "type": "shell",
-    "inline_shebang":"/bin/bash -xe",
-    "inline": [
-      "sudo apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws"]
     },
     {
     "type": "shell",
