@@ -39,6 +39,7 @@
       "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
       "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
       "uname -r",
+      "sudo apt update",
       "sudo systemctl disable unattended-upgrades.service",
       "sudo systemctl disable ondemand.service",
       "sudo ufw disable",
