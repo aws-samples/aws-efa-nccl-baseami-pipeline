@@ -34,16 +34,22 @@
     "expect_disconnect": true,
     "inline": [
       "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y",
-      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y git libtool autoconf cmake nasm unzip python3-pip python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc1 libnuma-dev numactl libjemalloc-dev preload ulatency ulatencyd htop iftop liblapack-dev libgfortran3 ipcalc wget curl dkms",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-aws git libtool autoconf cmake nasm unzip python3-pip python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc1 libnuma-dev numactl libjemalloc-dev preload ulatency ulatencyd htop iftop liblapack-dev libgfortran3 ipcalc wget curl dkms",
       "echo 'GRUB_CMDLINE_LINUX='intel_idle.max_cstate=1'' | sudo tee -a /etc/default/grub",
       "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
       "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
       "uname -r",
-      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws",
       "sudo systemctl disable unattended-upgrades.service",
       "sudo systemctl disable ondemand.service",
       "sudo ufw disable",
       "sudo shutdown -r now"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang":"/bin/bash -xe",
+    "inline": [
+      "uname -r",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws"]
     },
     {
     "type": "shell",
@@ -80,7 +86,6 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "echo ****DOWNLOAD ML REPOS****",
-      "sudo DEBIAN_FRONTEND=noninteractive apt install -y linux-headers-$(uname -r) linux-headers-5.4.0-1028-aws",
       "sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub",
       "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
       "sudo dpkg -i /tmp/deeplearning.deb",
