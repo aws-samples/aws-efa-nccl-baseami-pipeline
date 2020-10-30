@@ -105,7 +105,7 @@
       "cd /tmp && tar -xvf onednn.tgz && sudo mkdir -p /opt/onednn",
       "sudo mv /tmp/dnnl*/* /opt/onednn",
       "sudo modprobe nvidia",
-      "echo ****SET ENVIROMENT****",
+      "echo ****SET ENVIRONMENT****",
       "echo -e '#!/bin/sh\nMKLDNNROOT=/opt/onednn' | sudo tee /etc/profile.d/onednn.sh",
       "sudo systemctl enable nvidia-fabricmanager.service"],
     "pause_before":"20s"
