@@ -7,6 +7,7 @@
     "build_ami": "ami-02354e95b39ca8dec",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
+    "nvidia_version": "nvidia-fabricmanager-450 nvidia-driver-branch-450",
     "cuda_version": "cuda-toolkit-11-0",
     "cudnn_version": "libcudnn8"
   },
@@ -75,7 +76,7 @@
       "sudo rpm -Uhv /tmp/ml-repo.rpm",
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
       "sudo yum clean all",
-      "sudo yum -y install nvidia-fabricmanager-450 nvidia-driver-branch-450",
+      "sudo yum -y install {{user `nvidia_version`}}",
       "sudo yum -y install {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "sudo systemctl enable nvidia-fabricmanager",
