@@ -38,10 +38,6 @@
       "sudo yum install yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
-      "sudo mkdir /fsx",
-      "printf '#!/bin/bash\nnvidia-smi --auto-boost-default=0\n' | sudo tee /etc/rc.local",
-      "echo 'nvidia-smi -ac 2505,1177' | sudo tee -a /etc/rc.local",
-      "sudo chmod +x /etc/rc.local",
       "echo 'blacklist nouveau' | sudo tee /etc/modprobe.d/nvidia-graphics-drivers.conf",
       "echo 'blacklist lbm-nouveau' | sudo tee -a /etc/modprobe.d/nvidia-graphics-drivers.conf",
       "echo 'alias nouveau off' | sudo tee -a /etc/modprobe.d/nvidia-graphics-drivers.conf",
@@ -82,8 +78,6 @@
       "sudo yum -y install nvidia-fabricmanager-450 nvidia-driver-branch-450",
       "sudo yum -y install {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
-      "echo -e '#!/bin/sh -e\nnvidia-smi -pm 1\nnvidia-smi --auto-boost-default=0\nnvidia-smi -ac 1215,1410\n' | sudo tee /etc/rc.local",
-      "echo -e 'echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo\n' | sudo tee -a /etc/rc.local",
       "sudo systemctl enable nvidia-fabricmanager",
       "sudo chmod +x /etc/rc.local"]
     },
@@ -149,6 +143,17 @@
       "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
       "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo",
       "sudo yum install -y nvidia-docker2"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo mkdir -p /opt/aws",
+      "wget -O /tmp/aws-gpu-boost-clock.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/aws-gpu-boost-clock.sh'",
+      "wget -O /tmp/aws-gpu-boost-clock.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/aws-gpu-boost-clock.service'",
+      "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
+      "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
+      "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
     }
   ]
 }
