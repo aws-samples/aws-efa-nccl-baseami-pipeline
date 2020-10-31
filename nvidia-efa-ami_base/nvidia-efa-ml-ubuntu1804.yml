@@ -128,7 +128,7 @@
       "cd /opt",
       "sudo git clone https://github.com/NVIDIA/nccl.git",
       "cd nccl",
-      "sudo make -j src.build CUDA_HOME=/usr/local/cuda",
+      "sudo make -j src.build CUDA_HOME=/usr/local/cuda NVCC_GENCODE='-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80'",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/nccl/build/lib' | sudo tee /etc/profile.d/nccl.sh && sudo chmod +x /etc/profile.d/nccl.sh"]
     },
     {
