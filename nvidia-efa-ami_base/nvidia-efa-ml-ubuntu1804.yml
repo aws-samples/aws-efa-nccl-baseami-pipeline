@@ -6,6 +6,7 @@
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
+    "nvidia_version": "nvidia-fabricmanager-450",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "cuda_version": "cuda-drivers-450 cuda-toolkit-11-0",
     "cudnn_version": "libcudnn8"
@@ -98,7 +99,7 @@
       "sudo sh -c 'sudo wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list'",
       "sudo apt update",
       "echo ****INSTALL CUDA NCCL INTEL-MKL MKLDNN****",
-      "sudo apt install -o Dpkg::Options::='--force-overwrite' nvidia-fabricmanager-450 {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-dev {{user `intel_mkl_version`}} -y",
+      "sudo apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-dev {{user `intel_mkl_version`}} -y",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
       "echo -e '#!/bin/sh\nsource /opt/intel/mkl/bin/mklvars.sh intel64' | sudo tee /etc/profile.d/mkl.sh && sudo chmod +x /etc/profile.d/mkl.sh",
       "wget -O /tmp/onednn.tgz 'https://github.com/oneapi-src/oneDNN/releases/download/v1.5/dnnl_lnx_1.5.0_cpu_iomp.tgz'",
