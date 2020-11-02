@@ -158,9 +158,7 @@
     "inline": [
       "echo '    StrictHostKeyChecking no' | sudo tee -a /etc/ssh/ssh_config",
       "echo '    HostbasedAuthentication no' | sudo tee -a /etc/ssh/ssh_config",
-      "echo '    CheckHostIP no' | sudo tee -a /etc/ssh/ssh_config",
-      "ssh-keygen -t rsa -q -f \"$HOME/.ssh/id_rsa\" -N ''",
-      "cat $HOME/.ssh/id_rsa.pub | tee -a $HOME/.ssh/authorized_keys"]
+      "echo '    CheckHostIP no' | sudo tee -a /etc/ssh/ssh_config"]
     },
     {
     "type": "shell",
