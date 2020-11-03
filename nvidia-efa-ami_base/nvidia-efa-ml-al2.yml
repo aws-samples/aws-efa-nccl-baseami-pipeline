@@ -85,6 +85,8 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
+      "sudo amazon-linux-extras install docker",
+      "sudo systemctl enable docker",
       "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo",
       "sudo yum install -y nvidia-container-toolkit nvidia-docker2",
       "echo -e '{\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",      
@@ -132,17 +134,6 @@
       "cd nccl-tests",
       "make MPI=1 MPI_HOME=/opt/amazon/openmpi CUDA_HOME=/usr/local/cuda NCCL_HOME=/opt/nccl/build"]
     }, 
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
-      "sudo amazon-linux-extras install docker",
-      "sudo usermod -aG docker ec2-user",
-      "sudo systemctl enable docker",
-      "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
-      "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo",
-      "sudo yum install -y nvidia-docker2"]
-    },
     {
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
