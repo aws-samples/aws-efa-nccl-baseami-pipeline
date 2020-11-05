@@ -36,7 +36,7 @@ RUN cd $HOME \
     && curl -O https://efa-installer.amazonaws.com/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
     && tar -xf $HOME/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
     && cd aws-efa-installer \
-    && ./efa_installer.sh -y -d --skip-kmod --skip-limit-conf --no-verify | tee $HOME/install.log
+    && ./efa_installer.sh -y -g -d --skip-kmod --skip-limit-conf --no-verify | tee $HOME/install.log
 
 ## Test EFA installation
 RUN /opt/amazon/efa/bin/fi_info --version
