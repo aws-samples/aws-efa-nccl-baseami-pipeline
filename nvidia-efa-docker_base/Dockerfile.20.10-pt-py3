@@ -1,5 +1,5 @@
 
-FROM nvcr.io/nvidia/pytorch:20.10-pt-py3
+FROM nvcr.io/nvidia/pytorch:20.10-py3
 
 ARG EFA_INSTALLER_VERSION=latest
 ARG AWS_OFI_NCCL_VERSION=aws
