@@ -6,9 +6,9 @@
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
-    "nvidia_version": "nvidia-fabricmanager-450",
+    "nvidia_version": "nvidia-fabricmanager-455",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "cuda_version": "cuda-drivers-450 cuda-toolkit-11-0",
+    "cuda_version": "cuda-drivers-455 cuda-toolkit-11-1",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
@@ -20,7 +20,7 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "instance_type": "p3.2xlarge",
+    "instance_type": "p3.8xlarge",
     "ssh_username": "ubuntu",
     "ami_name": "ml-gpu-processor_{{user `flag`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
