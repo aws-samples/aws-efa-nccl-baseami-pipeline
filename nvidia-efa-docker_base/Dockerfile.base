@@ -1,11 +1,12 @@
-FROM nvcr.io/nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
+
+FROM nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
 
 ARG EFA_INSTALLER_VERSION=latest
-ARG NCCL_VERSION=master
 ARG AWS_OFI_NCCL_VERSION=aws
 ARG NCCL_TESTS_VERSION=v2.0.0
 
 RUN apt-get update -y
+RUN apt-get purge -y libmlx5-1 ibverbs-utils libibverbs-dev libibverbs1
 RUN apt-get install -y --allow-unauthenticated \
     git \
     gcc \
@@ -19,10 +20,12 @@ RUN apt-get install -y --allow-unauthenticated \
     autoconf \
     libtool \
     gdb \
-    automake
+    automake \
+    python3-pip \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
 
-## Remove existing ibverbs
-RUN apt-get purge -y libmlx5-1 ibverbs-utils libibverbs-dev libibverbs1
+
 
 ENV HOME /tmp
 
@@ -36,17 +39,14 @@ RUN cd $HOME \
     && curl -O https://efa-installer.amazonaws.com/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
     && tar -xf $HOME/aws-efa-installer-${EFA_INSTALLER_VERSION}.tar.gz \
     && cd aws-efa-installer \
-    && ./efa_installer.sh -y -d --skip-kmod --skip-limit-conf --no-verify | tee $HOME/install.log
-
-## Test EFA installation
-RUN /opt/amazon/efa/bin/fi_info --version
+    && ./efa_installer.sh -y -g -d --skip-kmod --skip-limit-conf --no-verify
 
 ###################################################
 ## Install NCCL
 RUN git clone https://github.com/NVIDIA/nccl.git /opt/nccl \
     && cd /opt/nccl \
     && make -j src.build CUDA_HOME=/usr/local/cuda \
-    NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
+    NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_60,code=sm_60"
 
 ###################################################
 ## Install AWS-OFI-NCCL plugin
@@ -70,6 +70,4 @@ RUN git clone https://github.com/NVIDIA/nccl-tests.git $HOME/nccl-tests \
        MPI_HOME=/opt/amazon/openmpi/ \
        CUDA_HOME=/usr/local/cuda \
        NCCL_HOME=/opt/nccl/build \
-       NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70"
-
-CMD echo "EFA Setup Complete! "
+       NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_60,code=sm_60"

@@ -13,7 +13,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd nvidia-efa-docker_base
-      - docker build -t $REPOSITORY_URI:base .
+      - docker build -t $REPOSITORY_URI:base -f Dockerfile.base .
       - docker tag $REPOSITORY_URI:base $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
