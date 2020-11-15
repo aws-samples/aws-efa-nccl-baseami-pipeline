@@ -21,7 +21,7 @@ RUN apt-get install -y --allow-unauthenticated \
     libtool \
     gdb \
     automake \
-    python3-pip \
+    python3-distutils \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
@@ -32,6 +32,7 @@ ENV HOME /tmp
 ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/opt/amazon/openmpi/lib:/opt/nccl/build/lib:/opt/amazon/efa/lib:/opt/aws-ofi-nccl/install/lib:$LD_LIBRARY_PATH
 ENV PATH=/opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:$PATH
 
+RUN curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && python3 /tmp/get-pip.py
 
 #################################################
 ## Install EFA installer
