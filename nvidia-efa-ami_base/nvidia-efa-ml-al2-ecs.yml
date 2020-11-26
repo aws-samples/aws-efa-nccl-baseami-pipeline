@@ -150,7 +150,8 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo amazon-linux-extras install ecs -y"]
+      "sudo amazon-linux-extras install ecs -y",
+      "sudo systemctl enable ecs.service"]
     }
   ]
 }
