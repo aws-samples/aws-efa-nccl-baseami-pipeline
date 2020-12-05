@@ -20,8 +20,8 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "instance_type": "p3.8xlarge",
     "spot_instance_types": ["p3.8xlarge","p3.16xlarge"],
+    "spot_price": "auto",
     "ssh_username": "ubuntu",
     "ami_name": "ml-gpu-processor_{{user `flag`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
