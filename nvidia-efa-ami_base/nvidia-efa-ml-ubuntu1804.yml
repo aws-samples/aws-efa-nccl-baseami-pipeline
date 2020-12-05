@@ -6,8 +6,8 @@
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
-    "nvidia_version": "nvidia-fabricmanager-455",
     "intel_mkl_version": "intel-mkl-2020.0-088",
+    "nvidia_version": "nvidia-fabricmanager-455",
     "cuda_version": "cuda-drivers-455 cuda-toolkit-11-1",
     "cudnn_version": "libcudnn8"
   },
@@ -27,7 +27,7 @@
     "launch_block_device_mappings":[{
       "delete_on_termination": true,
       "device_name": "/dev/sda1",
-      "volume_size": 150,
+      "volume_size": 100,
       "volume_type": "gp2"
     }]
   }],
