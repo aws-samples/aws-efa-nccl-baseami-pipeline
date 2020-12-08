@@ -172,7 +172,8 @@
       "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -",
       "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list",
       "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io nvidia-container-toolkit nvidia-container-runtime",
-      "echo -e '{\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"/usr/bin/nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",      "sudo usermod -aG docker $USER"
+      "echo -e '{\"default-ulimits\":{\"memlock\":{\"Name\":\"memlock\",\"Soft\":-1,\"Hard\":-1}},\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",
+      "sudo usermod -aG docker $USER"
       ]
     },
     {
