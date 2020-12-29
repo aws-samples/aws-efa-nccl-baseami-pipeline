@@ -1,0 +1,13 @@
+[Unit]
+Description=Create a default MIG configuration
+After=nvidia-fabricmanager.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStartPre=/bin/nvidia-smi -mig 1
+ExecStart=/opt/mig/create_mig.sh 19,19,19,19,19,19,19
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
