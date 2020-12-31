@@ -2,7 +2,6 @@
 Description=Create a default MIG configuration
 Requires=nvidia-fabricmanager.service
 After=nvidia-fabricmanager.service
-After=cloud-final.service
 
 [Service]
 Type=oneshot
