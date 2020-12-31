@@ -1,12 +1,15 @@
 [Unit]
 Description=Create a default MIG configuration
+Requires=nvidia-fabricmanager.service
 After=nvidia-fabricmanager.service
+After=cloud-final.service
 
 [Service]
 Type=oneshot
+EnvironmentFile=/etc/default/mig
 RemainAfterExit=yes
 ExecStartPre=/bin/nvidia-smi -mig 1
-ExecStart=/opt/mig/create_mig.sh 19,19,19,19,19,19,19
+ExecStart=/opt/mig/create_mig.sh $MIG_PARTITION
 TimeoutStartSec=0
 
 [Install]
