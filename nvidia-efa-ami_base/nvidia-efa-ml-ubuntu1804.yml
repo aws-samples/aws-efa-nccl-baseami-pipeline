@@ -110,7 +110,8 @@
       "sudo modprobe nvidia",
       "echo ****SET ENVIRONMENT****",
       "echo -e '#!/bin/sh\nMKLDNNROOT=/opt/onednn' | sudo tee /etc/profile.d/onednn.sh",
-      "sudo systemctl enable nvidia-fabricmanager.service"],
+      "sudo systemctl enable nvidia-fabricmanager.service",
+      "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades"],
     "pause_before":"20s"
     },
     {
