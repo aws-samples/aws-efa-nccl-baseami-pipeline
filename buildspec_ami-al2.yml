@@ -17,4 +17,5 @@ phases:
   build:
     commands:
       - echo "Build Phase"
+      - export AWS_MAX_ATTEMPTS=100
       - cd $CODEBUILD_SRC_DIR/nvidia-efa-ami_base && packer build nvidia-efa-ml-al2.yml
