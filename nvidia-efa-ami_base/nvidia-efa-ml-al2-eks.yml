@@ -4,7 +4,7 @@
     "flag": "eks-1.19",
     "subnet_id": "subnet-5163b237",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-04abfc2bbee10c176",
+    "build_ami": "ami-09d5097f0b2e9bc30",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
