@@ -1,10 +1,10 @@
 {
   "variables": {
     "region": "us-east-1",
-    "flag": "eks",
+    "flag": "eks-1.19",
     "subnet_id": "subnet-5163b237",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-0fae38e27c6113140",
+    "build_ami": "ami-04abfc2bbee10c176",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
@@ -37,7 +37,7 @@
     "inline": [
       "sudo  yum update -y",
       "sudo amazon-linux-extras install lustre2.10 epel -y",
-      "sudo yum install yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
+      "sudo yum install yum-utils cmake sipcalc dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
       "echo 'blacklist nouveau' | sudo tee /etc/modprobe.d/nvidia-graphics-drivers.conf",

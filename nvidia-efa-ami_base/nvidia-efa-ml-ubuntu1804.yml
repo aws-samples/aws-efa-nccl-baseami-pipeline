@@ -182,7 +182,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "wget -O /tmp/aws-ubuntu-eni-helper.deb 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/aws-ubuntu-eni-helper_0.2-1_all.deb'",
+      "wget -O /tmp/aws-ubuntu-eni-helper.deb 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/networking/aws-ubuntu-eni-helper_0.2-1_all.deb'",
       "sudo apt install /tmp/aws-ubuntu-eni-helper.deb -y"]
     },
     {
