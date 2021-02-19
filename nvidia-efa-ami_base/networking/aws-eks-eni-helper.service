@@ -1,6 +1,7 @@
 [Unit]
 Description=Secondary ENI help for EC2 Multicard Instances
-After=network.target
+Wants=kubelet.service
+After=kubelet.service
 
 [Service]
 Type=simple

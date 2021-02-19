@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 get_metadata()
 {
@@ -22,34 +22,37 @@ get_metadata()
 
 get_gateway() 
 {
-    gateway=$(sipcalc $1 | grep HostMin | awk '{print $2}')
+    gateway=$(sipcalc $1 | grep Usable | awk '{print $4}')
     echo $gateway
 }
 
 PRIMARY_MAC=$(get_metadata 'mac')
 PRIMARY_IF=$(ip -o link show | grep -F "link/ether $PRIMARY_MAC" | awk -F'[ :]+' '{print $2}')
 ALL_MACS=$(get_metadata 'network/interfaces/macs')
-
+echo $ALL_MACS
 MAC_ARRAY=($ALL_MACS)
-TABLE_ID=1001
-PREF_ID=32767
+TABLE_ID=10003
+PREF_ID=32763
 for MAC in "${MAC_ARRAY[@]}"; do
+    echo $MAC
     TRIMMED_MAC=$(echo $MAC | sed 's:/*$::')
+    echo $TRIMMED_MAC
     IF_NAME=$(ip -o link show | grep -F "link/ether $TRIMMED_MAC" | awk -F'[ :]+' '{print $2}')
-
+    echo $IF_NAME
     if [ "$IF_NAME" = "$PRIMARY_IF" ]; then
     echo "Primary Interface so no need to setup"
     else
-        IF_IP=$(ip --family inet address show $IF_NAME | grep -o 'inet [^/ ]*' | cut -f2 -d' ')
-    echo $IF_IP
+        IF_IP=$(get_metadata "network/interfaces/macs/$TRIMMED_MAC/local-ipv4s")
+        echo $IF_IP
         CIDR=$(get_metadata "network/interfaces/macs/$TRIMMED_MAC/vpc-ipv4-cidr-block")
         echo $CIDR
         echo $TABLE_ID $PREF_ID
         GATEWAY_IP=$(get_gateway $CIDR)
+        echo $GATEWAY_IP
         ip route add $CIDR dev $IF_NAME table $TABLE_ID proto kernel scope link src $IF_IP
         ip route add default via $GATEWAY_IP dev $IF_NAME table $TABLE_ID
         ip rule add from $IF_IP lookup $TABLE_ID pref $PREF_ID
-        ((TABLE_ID=TABLE_ID+1))
-        ((PREF_ID=PREF_ID+1))   
+        ((TABLE_ID=TABLE_ID-1))
+        ((PREF_ID=PREF_ID+1))
     fi
 done
