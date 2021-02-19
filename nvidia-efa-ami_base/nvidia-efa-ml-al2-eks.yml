@@ -126,12 +126,6 @@
       "wget -O /tmp/aws-gpu-mig.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/mig/aws-gpu-mig.service'",
       "sudo mv /tmp/create_mig.sh /opt/mig/ && sudo chmod +x /opt/mig/create_mig.sh",
       "sudo mv /tmp/aws-gpu-mig.service /lib/systemd/system"]
-    },
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
-      "echo -e 'p4d.24xlarge 737' | sudo tee -a /etc/eks/eni-max-pods.txt"]
     }
   ]
 }
