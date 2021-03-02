@@ -1,7 +1,8 @@
 [Unit]
 Description=Create a default MIG configuration
-Requires=nvidia-fabricmanager.service
-After=nvidia-fabricmanager.service
+Before=nvidia-fabricmanager.service
+After=nvidia-persistenced.service
+Requires=nvidia-persistenced.service
 
 [Service]
 Type=oneshot
