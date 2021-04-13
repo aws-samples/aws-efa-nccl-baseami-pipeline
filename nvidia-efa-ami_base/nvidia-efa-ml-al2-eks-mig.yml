@@ -1,0 +1,46 @@
+{
+  "variables": {
+    "region": "us-east-1",
+    "flag": "eks-1.19-mig",
+    "subnet_id": "subnet-5163b237",
+    "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
+    "build_ami": "ami-091cc61c6ff9c2d15",
+    "efa_pkg": "aws-efa-installer-latest.tar.gz",
+    "intel_mkl_version": "intel-mkl-2020.0-088",
+    "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
+    "cuda_version": "cuda-toolkit-11-2",
+    "cudnn_version": "libcudnn8"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami": "{{user `build_ami`}}",
+    "run_tags": {
+        "Name": "packer-gpu-processor-{{user `flag`}}"
+    },
+    "subnet_id": "{{user `subnet_id`}}",
+    "security_group_ids": "{{user `security_groupids`}}",
+    "spot_instance_types": ["p3.8xlarge","p3.16xlarge"],
+    "spot_price": "auto",
+    "ssh_username": "ec2-user",
+    "ami_name": "al2-gpu-efa-fsx-processor_{{user `flag`}}-{{timestamp}}",
+    "launch_block_device_mappings":[{
+      "delete_on_termination": true,
+      "device_name": "/dev/xvda",
+      "volume_size": 100,
+      "volume_type": "gp3"
+    }]
+ }],
+  "provisioners": [{
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo mkdir -p /opt/mig",
+      "echo -e '#!/bin/bash\nMIG_PARTITION=19,19,19,19,19,19,19' | sudo tee /etc/default/mig",
+      "wget -O /tmp/create_mig.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/mig/create_mig.sh'",
+      "wget -O /tmp/aws-gpu-mig.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/mig/aws-gpu-mig.service'",
+      "sudo mv /tmp/create_mig.sh /opt/mig/ && sudo chmod +x /opt/mig/create_mig.sh",
+      "sudo mv /tmp/aws-gpu-mig.service /lib/systemd/system"]
+    }
+  ]
+}
