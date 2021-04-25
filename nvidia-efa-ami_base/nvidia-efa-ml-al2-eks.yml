@@ -7,7 +7,7 @@
     "build_ami": "ami-09d5097f0b2e9bc30",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "nvidia-fabricmanager-465 nvidia-driver-branch-465",
+    "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
     "cuda_version": "cuda-toolkit-11-2",
     "cudnn_version": "libcudnn8"
   },
@@ -45,18 +45,6 @@
       "echo 'alias nouveau off' | sudo tee -a /etc/modprobe.d/nvidia-graphics-drivers.conf",
       "echo 'alias lbm-nouveau off' | sudo tee -a /etc/modprobe.d/nvidia-graphics-drivers.conf",
       "sudo shutdown -r now"]
-    },
-    {
-    "type": "shell",
-    "inline": [
-      "uname -r",
-      "wget -O /tmp/awscli2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
-      "cd /tmp && sudo unzip /tmp/awscli2.zip",
-      "sudo /tmp/aws/install",
-      "aws configure set default.s3.max_concurrent_requests 100",
-      "aws configure set default.s3.max_queue_size 10000",
-      "aws configure set default.s3.multipart_threshold 64MB",
-      "aws configure set default.s3.multipart_chunksize 16MB"]
     },
     {
     "type": "shell",
@@ -104,17 +92,6 @@
       "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
-    },
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
-      "sudo mkdir -p /opt/aws",
-      "wget -O /tmp/al2-eks-eni-helper.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/networking/al2-eks-eni-helper.sh'",
-      "wget -O /tmp/aws-eks-eni-helper.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/networking/aws-eks-eni-helper.service'",
-      "sudo mv /tmp/al2-eks-eni-helper.sh /opt/aws/ && sudo chmod +x /opt/aws/al2-eks-eni-helper.sh",
-      "sudo mv /tmp/aws-eks-eni-helper.service /lib/systemd/system",
-      "sudo systemctl enable aws-eks-eni-helper.service"]
     },
     { 
     "type": "shell",

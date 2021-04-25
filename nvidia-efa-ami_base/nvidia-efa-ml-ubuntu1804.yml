@@ -7,8 +7,8 @@
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "nvidia-fabricmanager-465",
-    "cuda_version": "cuda-drivers-465 cuda-toolkit-11-2",
+    "nvidia_version": "nvidia-fabricmanager-460",
+    "cuda_version": "cuda-drivers-460 cuda-toolkit-11-2",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
