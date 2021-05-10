@@ -154,6 +154,7 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "sudo mkdir -p /opt/aws",
+      "sudo yum install amazon-cloudwatch-agent -y",
       "wget -O /tmp/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hwaccel-error-parser.py'",
       "wget -O /tmp/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hw-monitor.service'",
       "wget -O /tmp/cwa-config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/cwa-config.json'",
