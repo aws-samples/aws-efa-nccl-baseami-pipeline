@@ -1,0 +1,13 @@
+[Unit]
+Description=HW Error Monitor
+Before=amazon-cloudwatch-agent.service
+After=nvidia-persistenced.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/bin/python3 /opt/aws/aws-hwaccel-error-parse.py
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
