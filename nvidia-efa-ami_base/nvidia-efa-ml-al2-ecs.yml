@@ -4,7 +4,7 @@
     "flag": "ecs",
     "subnet_id": "subnet-5163b237",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-02354e95b39ca8dec",
+    "build_ami": "ami-0be13a99cd970f6a9",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
@@ -28,7 +28,7 @@
       "delete_on_termination": true,
       "device_name": "/dev/xvda",
       "volume_size": 100,
-      "volume_type": "gp2"
+      "volume_type": "gp3"
     }]
  }],
   "provisioners": [{
@@ -133,27 +133,12 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "git clone https://github.com/NVIDIA/nccl-tests.git",
-      "cd nccl-tests",
-      "make MPI=1 MPI_HOME=/opt/amazon/openmpi CUDA_HOME=/usr/local/cuda NCCL_HOME=/opt/nccl/build"]
-    }, 
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
       "sudo mkdir -p /opt/aws",
       "wget -O /tmp/aws-gpu-boost-clock.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.sh'",
       "wget -O /tmp/aws-gpu-boost-clock.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.service'",
       "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
-    },
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
-      "sudo amazon-linux-extras install ecs -y",
-      "sudo systemctl enable ecs.service"]
     }
   ]
 }

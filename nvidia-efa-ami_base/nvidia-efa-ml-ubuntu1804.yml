@@ -28,7 +28,7 @@
       "delete_on_termination": true,
       "device_name": "/dev/sda1",
       "volume_size": 100,
-      "volume_type": "gp2"
+      "volume_type": "gp3"
     }]
   }],
   "provisioners": [{
@@ -97,19 +97,11 @@
       "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
       "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub",
       "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /'",
-      "curl -sL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | sudo apt-key add -",
-      "sudo sh -c 'sudo wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list'",
       "sudo apt update",
-      "echo ****INSTALL CUDA NCCL INTEL-MKL MKLDNN****",
-      "sudo apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-dev {{user `intel_mkl_version`}} -y",
+      "echo ****INSTALL CUDA NCCL****",
+      "sudo apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}} -y",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
-      "echo -e '#!/bin/sh\nsource /opt/intel/mkl/bin/mklvars.sh intel64' | sudo tee /etc/profile.d/mkl.sh && sudo chmod +x /etc/profile.d/mkl.sh",
-      "wget -O /tmp/onednn.tgz 'https://github.com/oneapi-src/oneDNN/releases/download/v1.5/dnnl_lnx_1.5.0_cpu_iomp.tgz'",
-      "cd /tmp && tar -xvf onednn.tgz && sudo mkdir -p /opt/onednn",
-      "sudo mv /tmp/dnnl*/* /opt/onednn",
-      "sudo modprobe nvidia",
       "echo ****SET ENVIRONMENT****",
-      "echo -e '#!/bin/sh\nMKLDNNROOT=/opt/onednn' | sudo tee /etc/profile.d/onednn.sh",
       "sudo systemctl enable nvidia-fabricmanager.service",
       "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades"],
     "pause_before":"20s"

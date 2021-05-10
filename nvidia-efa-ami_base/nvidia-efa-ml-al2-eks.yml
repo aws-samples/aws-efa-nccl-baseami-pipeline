@@ -28,7 +28,7 @@
       "delete_on_termination": true,
       "device_name": "/dev/xvda",
       "volume_size": 100,
-      "volume_type": "gp2"
+      "volume_type": "gp3"
     }]
  }],
   "provisioners": [{
@@ -48,18 +48,6 @@
     },
     {
     "type": "shell",
-    "inline": [
-      "uname -r",
-      "wget -O /tmp/awscli2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
-      "cd /tmp && sudo unzip /tmp/awscli2.zip",
-      "sudo /tmp/aws/install",
-      "aws configure set default.s3.max_concurrent_requests 100",
-      "aws configure set default.s3.max_queue_size 10000",
-      "aws configure set default.s3.multipart_threshold 64MB",
-      "aws configure set default.s3.multipart_chunksize 16MB"]
-    },
-    {
-    "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "echo '    StrictHostKeyChecking no' | sudo tee -a /etc/ssh/ssh_config",
@@ -76,7 +64,7 @@
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
       "sudo yum clean all",
       "sudo yum -y install {{user `nvidia_version`}}",
-      "sudo yum -y install {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
+      "sudo yum -y install {{user `cuda_version`}}",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "sudo systemctl enable nvidia-fabricmanager",
       "sudo chmod +x /etc/rc.local"]
@@ -104,17 +92,6 @@
       "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
-    },
-    {
-    "type": "shell",
-    "inline_shebang": "/bin/bash -xe",
-    "inline": [
-      "sudo mkdir -p /opt/aws",
-      "wget -O /tmp/al2-eks-eni-helper.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/networking/al2-eks-eni-helper.sh'",
-      "wget -O /tmp/aws-eks-eni-helper.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/networking/aws-eks-eni-helper.service'",
-      "sudo mv /tmp/al2-eks-eni-helper.sh /opt/aws/ && sudo chmod +x /opt/aws/al2-eks-eni-helper.sh",
-      "sudo mv /tmp/aws-eks-eni-helper.service /lib/systemd/system",
-      "sudo systemctl enable aws-eks-eni-helper.service"]
     },
     { 
     "type": "shell",
