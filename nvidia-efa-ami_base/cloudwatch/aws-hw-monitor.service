@@ -6,7 +6,7 @@ After=nvidia-persistenced.service
 [Service]
 Type=simple
 RemainAfterExit=yes
-ExecStart=/bin/python3 /opt/aws/aws-hwaccel-error-parse.py
+ExecStart=/bin/python3 /opt/aws/aws-hwaccel-error-parser.py
 TimeoutStartSec=0
 
 [Install]
