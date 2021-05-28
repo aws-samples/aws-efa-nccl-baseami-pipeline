@@ -7,7 +7,7 @@ These scripts can be used as examples for both AL2 and Ubuntu 18.04 the followin
 - CUDA 11.2
 - NVIDIA Fabric Manager 460.xx (version locked to the nvidia driver)
 - cuDNN 8
-- NCCL 2.8.3
+- NCCL 2.9.6
 - EFA latest driver
 - AWS-OFI-NCCL 
 - FSx kernel and client driver and utilities
