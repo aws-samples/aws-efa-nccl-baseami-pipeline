@@ -185,6 +185,21 @@
       "sudo mkdir -p /opt/aws",
       "sudo wget -O /tmp/cwa.deb 'https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb'",
       "sudo dpkg -i -E /tmp/cwa.deb",
+      "wget -O /tmp/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hwaccel-error-parser.py'",
+      "wget -O /tmp/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hw-monitor.service'",
+      "wget -O /tmp/cwa-config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/cwa-config.json'",
+      "sudo mv /tmp/aws-hwaccel-error-parser.py /opt/aws && sudo chmod +x /opt/aws/aws-hwaccel-error-parser.py",
+      "sudo mv /tmp/aws-hw-monitor.service /lib/systemd/system",
+      "sudo mv /tmp/cwa-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s",
+      "sudo systemctl enable aws-hw-monitor.service",
+      "sudo systemctl restart amazon-cloudwatch-agent.service"]
+     },
+     {
+     "type": "shell",
+     "inline_shebang": "/bin/bash -xe",
+     "inline": [
+      "sudo mkdir -p /opt/aws",
       "wget -O /tmp/aws-gpu-boost-clock.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.sh'",
       "wget -O /tmp/aws-gpu-boost-clock.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.service'",
       "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
