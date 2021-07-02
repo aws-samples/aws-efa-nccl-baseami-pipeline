@@ -146,13 +146,13 @@
     "inline": [
       "sudo mkdir -p /opt/aws",
       "sudo yum install amazon-cloudwatch-agent -y",
-      "wget -O /tmp/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipelin>
-      "wget -O /tmp/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw>
-      "wget -O /tmp/cwa-config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master>
-      "sudo mv /tmp/aws-hwaccel-error-parser.py /opt/aws && sudo chmod +x /opt/aws/aws-hwaccel-error-parser.>
+      "wget -O /tmp/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hwaccel-error-parser.py'",
+      "wget -O /tmp/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hw-monitor.service'",
+      "wget -O /tmp/cwa-config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/cwa-config.json'",
+      "sudo mv /tmp/aws-hwaccel-error-parser.py /opt/aws && sudo chmod +x /opt/aws/aws-hwaccel-error-parser.py",
       "sudo mv /tmp/aws-hw-monitor.service /lib/systemd/system",
       "sudo mv /tmp/cwa-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json",
-      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:>
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s",
       "sudo systemctl enable aws-hw-monitor.service",
       "sudo systemctl restart amazon-cloudwatch-agent.service"]
     }
