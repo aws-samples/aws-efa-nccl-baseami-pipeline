@@ -7,8 +7,8 @@
     "build_ami": "ami-09d5097f0b2e9bc30",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
-    "cuda_version": "cuda-toolkit-11-2",
+    "nvidia_version": "nvidia-fabricmanager-470 nvidia-driver-branch-470",
+    "cuda_version": "cuda-toolkit-11-4",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
@@ -20,7 +20,7 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "spot_instance_types": ["p3.8xlarge","p3.16xlarge"],
+    "spot_instance_types": ["p3.8xlarge","p3.16xlarge","g4dn.12xlarge"],
     "spot_price": "auto",
     "ssh_username": "ec2-user",
     "ami_name": "al2-gpu-efa-fsx-processor_{{user `flag`}}-{{timestamp}}",

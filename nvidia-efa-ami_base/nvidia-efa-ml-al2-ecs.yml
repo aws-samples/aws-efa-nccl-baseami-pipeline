@@ -7,8 +7,8 @@
     "build_ami": "ami-0be13a99cd970f6a9",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "nvidia-fabricmanager-460 nvidia-driver-branch-460",
-    "cuda_version": "cuda-toolkit-11-2",
+    "nvidia_version": "nvidia-fabricmanager-470 nvidia-driver-branch-470",
+    "cuda_version": "cuda-toolkit-11-4",
     "cudnn_version": "libcudnn8"
   },
   "builders": [{
@@ -139,6 +139,22 @@
       "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo mkdir -p /opt/aws",
+      "sudo yum install amazon-cloudwatch-agent -y",
+      "wget -O /tmp/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipelin>
+      "wget -O /tmp/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw>
+      "wget -O /tmp/cwa-config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master>
+      "sudo mv /tmp/aws-hwaccel-error-parser.py /opt/aws && sudo chmod +x /opt/aws/aws-hwaccel-error-parser.>
+      "sudo mv /tmp/aws-hw-monitor.service /lib/systemd/system",
+      "sudo mv /tmp/cwa-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:>
+      "sudo systemctl enable aws-hw-monitor.service",
+      "sudo systemctl restart amazon-cloudwatch-agent.service"]
     }
   ]
 }
