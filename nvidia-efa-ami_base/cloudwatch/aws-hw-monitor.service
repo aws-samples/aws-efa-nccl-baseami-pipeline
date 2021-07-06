@@ -5,8 +5,8 @@ After=nvidia-persistenced.service
 
 [Service]
 Type=simple
-RemainAfterExit=yes
-ExecStart=/bin/python3 /opt/aws/aws-hwaccel-error-parser.py
+ExecStart=/opt/aws/aws-cloudwatch-wrapper.sh
+RemainAfterExit=1
 TimeoutStartSec=0
 
 [Install]

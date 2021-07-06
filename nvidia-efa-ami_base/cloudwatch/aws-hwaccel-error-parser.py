@@ -1,5 +1,12 @@
 import subprocess
-f = subprocess.Popen(['tail','-F','-n','1000','/var/log/messages'],\
+import platform
+
+plat=platform.platform()
+if 'Ubuntu' in plat:
+    f = subprocess.Popen(['tail','-F','-n','1000','/var/log/syslog'],\
+        stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+else:
+    f = subprocess.Popen(['tail','-F','-n','1000','/var/log/messages'],\
         stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 
 while True:
