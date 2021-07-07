@@ -144,6 +144,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
+      "sudo /usr/local/bin/pip3 install boto3",
       "sudo mkdir -p /opt/aws/binaries",
       "sudo yum install amazon-cloudwatch-agent -y",
       "sudo wget -O /opt/aws/binaries/nvidia_smi 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/cloudwatch/binaries/nvidia_smi?raw=true'",
@@ -154,6 +155,7 @@
       "sudo wget -O /lib/systemd/system/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hw-monitor.service'",
       "sudo wget -O /opt/aws/amazon-cloudwatch-agent/bin/config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/cwa-config.json'",
       "sudo chmod +x /opt/aws/aws-hwaccel-error-parser.py",
+      "sudo chmod +x /opt/aws/aws-cloudwatch-wrapper.sh",
       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s",
       "sudo systemctl enable aws-hw-monitor.service",
       "sudo systemctl restart amazon-cloudwatch-agent.service"]
