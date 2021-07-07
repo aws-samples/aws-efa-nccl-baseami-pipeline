@@ -15,12 +15,12 @@
     "type": "amazon-ebs",
     "region": "{{user `region`}}",
     "source_ami": "{{user `build_ami`}}",
-    "run_tags": {
+    "fleet_tags": {
         "Name": "packer-gpu-processor-{{user `flag`}}"
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "spot_instance_types": "p3.2xlarge",
+    "spot_instance_types": "g4dn.8xlarge",
     "spot_price": "auto",
     "ssh_username": "ubuntu",
     "ami_name": "ml-gpu-processor_{{user `flag`}}-{{timestamp}}",
