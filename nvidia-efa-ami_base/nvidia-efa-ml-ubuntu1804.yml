@@ -2,7 +2,7 @@
   "variables": {
     "region": "us-east-1",
     "flag": "ubuntu1804-base",
-    "subnet_id": "subnet-5163b237",
+    "subnet_id": "subnet-e832edc9",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
     "build_ami": "ami-0ac80df6eff0e70b5",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
