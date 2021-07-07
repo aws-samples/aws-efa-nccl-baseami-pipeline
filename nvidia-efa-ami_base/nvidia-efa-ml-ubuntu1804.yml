@@ -15,7 +15,7 @@
     "type": "amazon-ebs",
     "region": "{{user `region`}}",
     "source_ami": "{{user `build_ami`}}",
-    "fleet_tags": {
+    "run_tags": {
         "Name": "packer-gpu-processor-{{user `flag`}}"
     },
     "subnet_id": "{{user `subnet_id`}}",
