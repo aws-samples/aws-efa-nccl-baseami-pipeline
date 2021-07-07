@@ -108,7 +108,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo pip3 install boto3",
       "sudo mkdir -p /opt/aws/binaries",
       "sudo yum install amazon-cloudwatch-agent -y",
       "sudo wget -O /opt/aws/binaries/nvidia_smi 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/cloudwatch/binaries/nvidia_smi?raw=true'",

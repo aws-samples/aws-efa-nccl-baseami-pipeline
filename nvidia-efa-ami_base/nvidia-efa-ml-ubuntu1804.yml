@@ -182,7 +182,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo pip3 install boto3",
       "sudo mkdir -p /opt/aws/binaries",
       "sudo wget -O /tmp/cwa.deb 'https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb'",
       "sudo dpkg -i -E /tmp/cwa.deb",
