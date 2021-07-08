@@ -8,7 +8,7 @@ phases:
       - yum -y update && yum -y install unzip curl python3-pip
       - pip3 install awscli
       - echo "Installing Packer..."
-      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.1/packer_1.6.1_linux_amd64.zip && unzip packer.zip
+      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.6/packer_1.6.6_linux_amd64.zip && unzip packer.zip
       - cd $CODEBUILD_SRC_DIR/nvidia-efa-ami_base && packer version
       - echo "Validating packer JSON"
       - packer validate nvidia-efa-ml-ubuntu1804.yml
@@ -17,5 +17,5 @@ phases:
   build:
     commands:
       - echo "Build Phase"
-      - export AWS_MAX_ATTEMPTS=100
+      - export AWS_MAX_ATTEMPTS=200
       - cd $CODEBUILD_SRC_DIR/nvidia-efa-ami_base && packer build nvidia-efa-ml-ubuntu1804.yml
