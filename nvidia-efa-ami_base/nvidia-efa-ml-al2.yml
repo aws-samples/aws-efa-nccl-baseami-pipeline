@@ -28,6 +28,7 @@
       "delete_on_termination": true,
       "device_name": "/dev/xvda",
       "volume_size": 100,
+      "throughput": 1000,
       "volume_type": "gp3"
     }]
  }],
