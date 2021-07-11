@@ -5,7 +5,7 @@ After=syslog.target network-online.target
 
 [Service]
 Type=simple
-ExecStart=/opt/aws/aws-cloudwatch-wrapper.sh
+ExecStart=/opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh
 RemainAfterExit=1
 TimeoutStartSec=0
 
