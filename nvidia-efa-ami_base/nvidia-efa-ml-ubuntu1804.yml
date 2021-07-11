@@ -184,24 +184,23 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo pip3 install boto3",
-      "sudo mkdir -p /opt/aws/binaries",
-      "sudo wget -O /tmp/cwa.deb 'https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb'",
-      "sudo dpkg -i -E /tmp/cwa.deb",
-      "sudo wget -O /opt/aws/binaries/nvidia_smi 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/cloudwatch/binaries/nvidia_smi?raw=true'",
-      "sudo chmod +x /opt/aws/binaries/nvidia_smi",
-      "sudo wget -O /opt/aws/aws-cloudwatch-wrapper.sh 'https://raw.githubusercontent.com/aws-samples/aws-efa-nccl-baseami-pipeline/master/nvidia-efa-ami_base/cloudwatch/aws-cloudwatch-wrapper.sh'",
-      "sudo wget -O /opt/aws/accel-to-cw.py 'https://raw.githubusercontent.com/aws-samples/aws-efa-nccl-baseami-pipeline/master/nvidia-efa-ami_base/cloudwatch/accel-to-cw.py'",
-      "sudo wget -O /opt/aws/aws-hwaccel-error-parser.py 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hwaccel-error-parser.py'",
-      "sudo wget -O /lib/systemd/system/aws-hw-monitor.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/aws-hw-monitor.service'",
-      "sudo wget -O /opt/aws/amazon-cloudwatch-agent/bin/config.json 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/cloudwatch/cwa-config.json'",
-      "sudo chmod +x /opt/aws/aws-hwaccel-error-parser.py",
-      "sudo chmod +X /opt/aws/aws-cloudwatch-wrapper.sh",
+      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo mkdir -p /opt/aws",
+      "sudo yum install amazon-cloudwatch-agent -y",
+      "git clone https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline.git /tmp/aws-efa-nccl-baseami",
+      "sudo mv /tmp/aws-efa-nccl-baseami/nvidia-efa-ami_base/cloudwatch /opt/aws/",
+      "sudo mv /opt/aws/cloudwatch/aws-hw-monitor.service /lib/systemd/system",
+      "echo -e '#!/bin/sh\n' | sudo tee /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/aws-hwaccel-error-parser.py &' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/cloudwatch/nvidia/accel-to-cw.py /opt/aws/cloudwatch/nvidia/nvidia_smi >> /dev/null 2>&1 &\n' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/cloudwatch/efa/efa-to-cw.py /opt/aws/cloudwatch/efa/efaslurp >> /dev/null 2>&1 &\n' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "sudo chmod +x /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "sudo cp /opt/aws/cloudwatch/nvidia/cwa-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json",
       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s",
       "sudo systemctl enable aws-hw-monitor.service",
       "sudo systemctl restart amazon-cloudwatch-agent.service"]
-     },
-     {
+    },
+    {
      "type": "shell",
      "inline_shebang": "/bin/bash -xe",
      "inline": [
@@ -212,5 +211,5 @@
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
     }
-    ]
+  ]
 }
