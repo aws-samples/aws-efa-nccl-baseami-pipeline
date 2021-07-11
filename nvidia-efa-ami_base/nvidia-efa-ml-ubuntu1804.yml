@@ -184,9 +184,10 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo /usr/bin/pip3 install boto3",
       "sudo mkdir -p /opt/aws",
-      "sudo yum install amazon-cloudwatch-agent -y",
+      "sudo wget -O /tmp/cwa.deb 'https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb'",
+      "sudo dpkg -i /tmp/cwa.deb",
       "git clone https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline.git /tmp/aws-efa-nccl-baseami",
       "sudo mv /tmp/aws-efa-nccl-baseami/nvidia-efa-ami_base/cloudwatch /opt/aws/",
       "sudo mv /opt/aws/cloudwatch/aws-hw-monitor.service /lib/systemd/system",

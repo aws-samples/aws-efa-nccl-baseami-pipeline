@@ -146,7 +146,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo /usr/bin/pip3 install boto3",
       "sudo mkdir -p /opt/aws",
       "sudo yum install amazon-cloudwatch-agent -y",
       "git clone https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline.git /tmp/aws-efa-nccl-baseami",
