@@ -1,7 +1,7 @@
 [Unit]
 Description=HW Error Monitor
 Before=amazon-cloudwatch-agent.service
-After=nvidia-persistenced.service
+After=syslog.target network-online.target
 
 [Service]
 Type=simple
