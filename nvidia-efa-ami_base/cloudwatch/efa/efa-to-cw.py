@@ -62,7 +62,7 @@ def create_metric_shard(i,d,n,m):
                     }
                 ]
     for key, value in m.items():
-        a={'MetricName':key,'Dimensions':MY_DIMENSIONS,'Unit':'None','StorageResolution': store_reso,'Value':int(value)}
+        a={'MetricName':key,'Dimensions':MY_DIMENSIONS,'Unit':'Bytes','StorageResolution': store_reso,'Value':int(value)}
         metric_shard.append(a)
     return metric_shard
 
