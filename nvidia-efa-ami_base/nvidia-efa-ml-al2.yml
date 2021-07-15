@@ -9,7 +9,8 @@
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "nvidia-fabricmanager-470 nvidia-driver-branch-470",
     "cuda_version": "cuda-toolkit-11-4",
-    "cudnn_version": "libcudnn8"
+    "cudnn_version": "libcudnn8",
+    "nccl_version": "2.10.3-1"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -115,7 +116,7 @@
       "cd /opt",
       "sudo git clone https://github.com/NVIDIA/nccl.git",
       "cd nccl",
-      "sudo git checkout v2.9.6-1",
+      "sudo git checkout {{user `nccl_version`}}",
       "sudo make -j src.build CUDA_HOME=/usr/local/cuda NVCC_GENCODE='-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80'",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/nccl/build/lib' | sudo tee /etc/profile.d/nccl.sh"]
     },
