@@ -10,7 +10,7 @@
     "nvidia_version": "nvidia-fabricmanager-470 nvidia-driver-branch-470",
     "cuda_version": "cuda-toolkit-11-4",
     "cudnn_version": "libcudnn8",
-    "nccl_version": "2.10.3-1"
+    "nccl_version": "v2.10.3-1"
   },
   "builders": [{
     "type": "amazon-ebs",
