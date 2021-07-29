@@ -35,7 +35,30 @@ After filling in the `variables` check that the packer script is validated.
 packer validate nvidia-efa-ml-al2.yml
 packer build nvidia-efa-ml-al2.yml
 ````
+## Accelerator Metrics/Error Handling in Cloudwatch
+In this repo we also have an accelerator metrics and error handling custom metric which will push key metrics into cloudwatch. This is particularly useful in situations where you have an abstracted view of the underlying accelerator and unable to monitor metrics directly. 
+For NVIDIA GPUS the following metrics are captured:
 
+Accelerator kernel utilization
+Memory utilization
+Memory free
+Memory used
+SM clocks
+Memory clocks
+Total uncorrectable ECC Errors
+
+The metric code is natively added to all AMIs built from this repo but you can use it directly in your AMIs as well. If interested you can extend this code to use your own metrics montitor as long as you follow this JSON schema:
+````json
+{
+  "Id": 1,
+  "AcceleratorName": "NVIDIA A100-SXM4-40GB",
+  "AcceleratorDriver": "470.42.01",
+  "Metrics": {
+    "<Metric_Name>": <Metric_Value>,
+    "<Metric_Name>": <Metric_Value>
+  }
+}
+````
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
