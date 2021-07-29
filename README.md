@@ -38,7 +38,7 @@ packer build nvidia-efa-ml-al2.yml
 ## Accelerator Metrics/Error Handling in Cloudwatch
 In this repo we also have an accelerator metrics and error handling custom metric which will push key metrics into cloudwatch. This is particularly useful in situations where you have an abstracted view of the underlying accelerator and unable to monitor metrics directly. 
 For NVIDIA GPUS the following metrics are captured:
-
+![dashboard](imgs/accelerator_dashboard.png?raw=true "Dashboard")
 Accelerator kernel utilization
 Memory utilization
 Memory free
@@ -61,6 +61,7 @@ The metric code is natively added to all AMIs built from this repo but you can u
 ````
 Furthermore we have added error handling specifically for NVIDIA GPUs in Cloudwatch Logs. A logstream is created which will lift ```NVRM: ...``` related messages in the syslog of the instance and push them to Cloudwatch.
 ![error log](imgs/example_error.png?raw=true "Example CW logs")
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
