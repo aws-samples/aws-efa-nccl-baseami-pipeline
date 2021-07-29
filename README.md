@@ -60,7 +60,7 @@ The metric code is natively added to all AMIs built from this repo but you can u
 }
 ````
 Furthermore we have added error handling specifically for NVIDIA GPUs in Cloudwatch Logs. A logstream is created which will lift ```NVRM: ...``` related messages in the syslog of the instance and push them to Cloudwatch.
-!(imgs/example_error.png?raw=true "Example CW logs")
+![error log](imgs/example_error.png?raw=true "Example CW logs")
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
