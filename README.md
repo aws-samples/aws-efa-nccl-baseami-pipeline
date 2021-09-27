@@ -25,7 +25,7 @@ In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2
     "build_ami": "`<lastest_base_ami_>",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "cuda_version": "cuda-drivers-470 cuda-toolkit-11-4",
+    "cuda_version": "cuda-drivers-fabricmanager-470 cuda-toolkit-11-4",
     "cudnn_version": "libcudnn8",
     "nccl_version": "2.10.3-1"
   },
