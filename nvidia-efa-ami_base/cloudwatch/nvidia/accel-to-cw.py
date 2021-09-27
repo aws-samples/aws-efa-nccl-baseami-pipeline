@@ -61,8 +61,29 @@ def create_metric_shard(i,d,n,m):
                         'Value': str(d)
                     }
                 ]
+    AGR_DIMENSIONS=[
+                    {
+                        'Name': 'Id',
+                        'Value': INSTANCE_ID
+                    },
+                    {
+                        'Name': 'InstanceType',
+                        'Value': INSTANCE_TYPE
+                    },
+                    {
+                        'Name': 'AcceleratorName',
+                        'Value': str(n)
+                    },
+                    {
+                        'Name': 'AcceleratorDriver',
+                        'Value': str(d)
+                    }
+                ]
     for key, value in m.items():
         a={'MetricName':key,'Dimensions':MY_DIMENSIONS,'Unit':'None','StorageResolution': store_reso,'Value':int(value)}
+        metric_shard.append(a)
+    for key, value in m.items():
+        a={'MetricName':key,'Dimensions':AGR_DIMENSIONS,'Unit':'None','StorageResolution': store_reso,'Value':int(value)}
         metric_shard.append(a)
     return metric_shard
 
