@@ -1,16 +1,16 @@
 {
   "variables": {
     "region": "us-east-1",
-    "flag": "eks-1.19",
+    "flag": "eks-1.20",
     "subnet_id": "subnet-baff22e5",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-09d5097f0b2e9bc30",
+    "build_ami": "ami-0ee7f482baec5230f",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "cuda-drivers-fabricmanager-470",
-    "cuda_version": "cuda-toolkit-11-4",
+    "nvidia_version": "cuda-drivers-fabricmanager-495",
+    "cuda_version": "cuda-toolkit-11-5 nvidia-gds-11-5",
     "cudnn_version": "libcudnn8",
-    "nccl_version": "v2.10.3-1"
+    "nccl_version": "v2.11.4-1"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -21,8 +21,7 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "spot_instance_types": "g4dn.8xlarge",
-    "spot_price": "auto",
+    "instance_type": "g4dn.16xlarge",
     "ssh_username": "ec2-user",
     "ami_name": "al2-gpu-efa-fsx-processor_{{user `flag`}}-{{timestamp}}",
     "launch_block_device_mappings":[{

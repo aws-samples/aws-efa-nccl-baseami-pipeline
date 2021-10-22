@@ -18,16 +18,17 @@ These scripts can be used as examples for both AL2 and Ubuntu 18.04 the followin
 In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2 and Ubuntu 18.04. Generally you just need to modify the `variables:{}` json and execute the packer build
 ````json
 "variables": {
-    "region": "<region>",
-    "flag": "al2-base",
+    "region": "us-east-1",
+    "flag": "<flag>",
     "subnet_id": "<subnetid>",
-    "security_groupids": "<security_group_ids_list>",
-    "build_ami": "`<lastest_base_ami_>",
+    "security_groupids": "<security_group_id,security_group_id",
+    "build_ami": "<buildami>",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "cuda_version": "cuda-drivers-fabricmanager-470 cuda-toolkit-11-4",
+    "nvidia_version": "cuda-drivers-fabricmanager-495",
+    "cuda_version": "cuda-toolkit-11-5 nvidia-gds-11-5",
     "cudnn_version": "libcudnn8",
-    "nccl_version": "2.10.3-1"
+    "nccl_version": "v2.11.4-1"
   },
 ````  
 After filling in the `variables` check that the packer script is validated.
