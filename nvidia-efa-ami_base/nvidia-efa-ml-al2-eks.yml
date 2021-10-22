@@ -38,7 +38,7 @@
     "expect_disconnect": true,
     "inline": [
       "sudo  yum update -y",
-      "sudo amazon-linux-extras install lustre2.10 kernel-5.10 epel -y",
+      "sudo amazon-linux-extras install lustre2.10 epel -y",
       "sudo yum install yum-utils cmake sipcalc dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
