@@ -21,7 +21,7 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "instance_type": "g4dn.16xlarge",
+    "instance_type": "r5n.12xlarge",
     "ssh_username": "ec2-user",
     "ami_name": "al2-gpu-efa-fsx-processor_{{user `flag`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
