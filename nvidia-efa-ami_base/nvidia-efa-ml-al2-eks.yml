@@ -7,7 +7,7 @@
     "build_ami": "ami-0ee7f482baec5230f",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "cuda-drivers-fabricmanager-470",
+    "nvidia_version": "cuda-drivers-fabricmanager-495",
     "cuda_version": "cuda-toolkit-11-4 nvidia-gds-11-4",
     "cudnn_version": "libcudnn8",
     "nccl_version": "v2.11.4-1"
@@ -38,7 +38,8 @@
     "expect_disconnect": true,
     "inline": [
       "sudo  yum update -y",
-      "sudo amazon-linux-extras install lustre2.10 epel -y",
+      "sudo amazon-linux-extras disable kernel-5.4",
+      "sudo amazon-linux-extras install lustre2.10 epel kernel-5.10 -y",
       "sudo yum install yum-utils cmake sipcalc dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
