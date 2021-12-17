@@ -116,7 +116,7 @@
       "sudo mkdir -p /opt/aws-ofi-nccl",
       "./configure --prefix=/opt/aws-ofi-nccl --with-mpi=/opt/amazon/openmpi --with-libfabric=/opt/amazon/efa --with-nccl=/opt/nccl/build --with-cuda=/usr/local/cuda",
       "make && sudo make install",
-      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/aws-ofi-nccl/lib' | sudo tee /etc/profile.d/aws-ofi-nccl.sh"]
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/aws-ofi-nccl/lib\nexport NCCL_PROTO=simple' | sudo tee /etc/profile.d/aws-ofi-nccl.sh"]
     },
     {
     "type": "shell",
