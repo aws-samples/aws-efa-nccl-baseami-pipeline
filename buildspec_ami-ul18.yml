@@ -5,7 +5,7 @@ phases:
   pre_build:
     commands:
       - echo "Installing additional YUM & Python packages..."
-      - yum -y update && yum -y install unzip curl python3-pip
+      - apt update -y && apt install -y unzip curl python3-pip
       - pip3 install awscli
       - echo "Installing Packer..."
       - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.6/packer_1.6.6_linux_amd64.zip && unzip packer.zip
