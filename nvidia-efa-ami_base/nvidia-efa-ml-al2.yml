@@ -73,7 +73,7 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y",
+      "sudo yum install kernel-devel kernel-headers -y",
       "wget -O /tmp/ml-repo.rpm https://developer.download.nvidia.com/compute/machine-learning/repos/rhel7/x86_64/nvidia-machine-learning-repo-rhel7-1.0.0-1.x86_64.rpm",
       "sudo rpm -Uhv /tmp/ml-repo.rpm",
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
