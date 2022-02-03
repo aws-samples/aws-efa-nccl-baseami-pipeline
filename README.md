@@ -37,7 +37,7 @@ packer validate nvidia-efa-ml-al2.yml
 packer build nvidia-efa-ml-al2.yml
 ````
 ## Accelerator Metrics/Error Handling in Cloudwatch
-In this repo we also have an accelerator metrics and error handling custom metric which will push key metrics into cloudwatch. This is particularly useful in situations where you have an abstracted view of the underlying accelerator and unable to monitor metrics directly. 
+In this repo we also have an accelerator metrics and error handling (XIDs) custom metric which will push key metrics into cloudwatch. This is particularly useful in situations where you have an abstracted view of the underlying accelerator and unable to monitor metrics directly. 
 For NVIDIA GPUS the following metrics are captured:
 ![dashboard](imgs/accelerator_dashboard.png?raw=true "Dashboard")
 Accelerator kernel utilization
