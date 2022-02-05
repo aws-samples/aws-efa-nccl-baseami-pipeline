@@ -7,7 +7,7 @@
     "build_ami": "ami-02354e95b39ca8dec",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "470.82.01",
+    "nvidia_version": "470.103.01",
     "cuda_version": "cuda-toolkit-11-4",
     "cudnn_version": "libcudnn8",
     "nccl_version": "v2.11.4-1"
@@ -79,7 +79,7 @@
       "sudo yum clean all",
       "sudo wget -O /tmp/NVIDIA-Linux-driver.run 'https://us.download.nvidia.com/tesla/{{user `nvidia_version`}}/NVIDIA-Linux-x86_64-{{user `nvidia_version`}}.run'",
       "sudo CC=gcc10-cc sh /tmp/NVIDIA-Linux-driver.run -q -a --ui=none",
-      "sudo curl -O https://developer.download.nvidia.com/compute/cuda/redist/fabricmanager/linux-x86_64/fabricmanager-linux-x86_64-{{user `nvidia_version`}}-archive.tar.xz",
+      "sudo curl -O https://developer.download.nvidia.com/compute/nvidia-driver/redist/fabricmanager/linux-x86_64/fabricmanager-linux-x86_64-{{user `nvidia_version`}}.tar.xz",
       "sudo tar xf fabricmanager-linux-x86_64-{{user `nvidia_version`}}-archive.tar.xz -C /tmp",
       "sudo rsync -al /tmp/fabricmanager-linux-x86_64-{{user `nvidia_version`}}-archive/ /usr/ --exclude LICENSE",
       "sudo mv /usr/systemd/nvidia-fabricmanager.service /usr/lib/systemd/system",
