@@ -22,11 +22,11 @@
     "security_group_ids": "{{user `security_groupids`}}",
     "instance_type": "g5.8xlarge",
     "ssh_username": "ec2-user",
-    "ami_name": "al2-gpu-efa-fsx-processor_{{user `flag`}}_{{user `nvidia_version`}}-{{timestamp}}",
+    "ami_name": "aws_{{user `flag`}}_{{user `nvidia_version`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
       "delete_on_termination": true,
       "device_name": "/dev/xvda",
-      "volume_size": 200,
+      "volume_size": 100,
       "throughput": 1000,
       "iops": 10000,
       "volume_type": "gp3"
