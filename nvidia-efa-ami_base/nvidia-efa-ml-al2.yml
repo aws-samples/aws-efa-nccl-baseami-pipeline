@@ -52,6 +52,19 @@
     {
     "type": "shell",
     "inline": [
+      "echo 'net.core.default_qdisc = fq' | sudo tee -a /etc/sysctl.conf",
+      "echo 'kernel.yama.ptrace_scope = 0' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_congestion_control = bbr' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_timestamps = 0' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.rmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.wmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_rmem = 4096 87380 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_wmem = 4096 65536 67108864' | sudo tee -a /etc/sysctl.conf",
+      "sudo sysctl -p"]
+    },
+    {
+    "type": "shell",
+    "inline": [
       "uname -r",
       "wget -O /tmp/awscli2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
       "cd /tmp && sudo unzip /tmp/awscli2.zip",
