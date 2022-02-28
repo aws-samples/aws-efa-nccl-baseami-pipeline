@@ -32,7 +32,7 @@
                  "collect_list": [
                      {
                          "file_path": "/var/log/gpuerrors.log",
-                         "log_group_name": "accel-error-log",
+                         "log_group_name": "/ec2/accelerated/accel-error-log",
                          "log_stream_name": "{instance_id}"
                      }
                  ]
