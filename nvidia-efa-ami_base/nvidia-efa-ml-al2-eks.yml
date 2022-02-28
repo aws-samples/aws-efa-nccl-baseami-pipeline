@@ -137,7 +137,8 @@
     "inline": [
       "sudo /usr/bin/pip3 install boto3",
       "sudo mkdir -p /opt/aws",
-      "sudo yum install amazon-cloudwatch-agent -y",
+      "sudo wget -O /tmp/cwa.rpm 'https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm'",
+      "sudo rpm -iUhv /tmp/cwa.rpm",
       "git clone https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline.git /tmp/aws-efa-nccl-baseami",
       "sudo mv /tmp/aws-efa-nccl-baseami/nvidia-efa-ami_base/cloudwatch /opt/aws/",
       "sudo mv /opt/aws/cloudwatch/aws-hw-monitor.service /lib/systemd/system",
