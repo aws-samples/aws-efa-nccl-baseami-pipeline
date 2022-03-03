@@ -31,8 +31,8 @@
              "files": {
                  "collect_list": [
                      {
-                         "file_path": "/var/log/gpuerrors.log",
-                         "log_group_name": "/ec2/accelerated/accel-error-log",
+                         "file_path": "/var/log/gpuevent.log",
+                         "log_group_name": "/ec2/accelerated/accel-event-log",
                          "log_stream_name": "{instance_id}"
                      }
                  ]
