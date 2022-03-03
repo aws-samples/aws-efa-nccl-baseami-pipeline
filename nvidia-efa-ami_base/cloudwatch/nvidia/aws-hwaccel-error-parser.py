@@ -12,7 +12,7 @@ else:
 while True:
     line = f.stdout.readline()
     if "NVRM:" in str(line):
-       file = open('/var/log/gpuerrors.log','a')
+       file = open('/var/log/gpuevents.log','a')
        print(line.decode('utf8', errors='strict').strip())
        file.write(line.decode('utf8', errors='strict').strip())
        file.write('\n')
