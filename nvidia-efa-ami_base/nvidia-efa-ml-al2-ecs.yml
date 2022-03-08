@@ -9,7 +9,7 @@
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "510.47.03",
     "cuda_version": "cuda-toolkit-11-6",
-    "nccl_version": "v2.11.4-1"
+    "nccl_version": "v2.12.7-1"
   },
   "builders": [{
     "type": "amazon-ebs",
