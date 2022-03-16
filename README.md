@@ -30,7 +30,7 @@ In the `nvidia-efa-ami_base` dir you will find packer scripts for Amazon Linux 2
     "nvidia_version": "510.47.03",
     "cuda_version": "cuda-toolkit-11-6 nvidia-gds-11-6",
     "cudnn_version": "libcudnn8",
-    "nccl_version": "v2.11.4-1"
+    "nccl_version": "v2.12.7-1"
   },
 ````  
 After filling in the `variables` check that the packer script is validated.
