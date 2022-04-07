@@ -158,6 +158,17 @@
       "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
       "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
     },
+    { 
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo mkdir -p /opt/mig",
+      "echo -e '#!/bin/bash\nMIG_PARTITION=7' | sudo tee /etc/default/mig",
+      "wget -O /tmp/create_mig.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/mig/create_mig.sh'",
+      "wget -O /tmp/aws-gpu-mig.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/mig/aws-gpu-mig.service'",
+      "sudo mv /tmp/create_mig.sh /opt/mig/ && sudo chmod +x /opt/mig/create_mig.sh",
+      "sudo mv /tmp/aws-gpu-mig.service /lib/systemd/system"]
+    },
     {
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
