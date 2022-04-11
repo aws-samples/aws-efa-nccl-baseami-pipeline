@@ -1,10 +1,10 @@
 {
   "variables": {
     "region": "us-east-1",
-    "flag": "eks-1.20",
+    "flag": "eks-1.21",
     "subnet_id": "subnet-baff22e5",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-01034b19c29c6bcdf",
+    "build_ami": "ami-0c6f20e00e2f5869a",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "510.47.03",
