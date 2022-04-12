@@ -103,6 +103,7 @@
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
       "echo ****SET ENVIRONMENT****",
       "sudo systemctl enable nvidia-fabricmanager.service",
+      "sudo apt-mark hold nvidia* linux-aws linux-headers-aws linux-image-aws",
       "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades"],
     "pause_before":"20s"
     },
