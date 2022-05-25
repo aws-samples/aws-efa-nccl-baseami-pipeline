@@ -77,6 +77,15 @@
     },
     {
     "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda ./build-rpm-packages.sh",
+      "sudo rpm -Uvh *.rpm"]
+    },
+    {
+    "type": "shell",
     "inline": [
       "echo 'net.core.default_qdisc = fq' | sudo tee -a /etc/sysctl.conf",
       "echo 'net.ipv4.tcp_congestion_control = bbr' | sudo tee -a /etc/sysctl.conf",

@@ -114,6 +114,15 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda ./build-deb-packages.sh",
+      "sudo dpkg -i *.deb"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
       "wget -O /tmp/aws-efa-installer.tar.gz https://efa-installer.amazonaws.com/{{user `efa_pkg`}}",
       "tar -xf /tmp/aws-efa-installer.tar.gz -C /tmp",
       "cd /tmp/aws-efa-installer",

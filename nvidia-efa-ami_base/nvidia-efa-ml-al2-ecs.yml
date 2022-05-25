@@ -104,6 +104,15 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda ./build-rpm-packages.sh",
+      "sudo rpm -Uvh *.rpm"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
       "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
       "sudo amazon-linux-extras install docker -y",
       "sudo systemctl enable docker",
