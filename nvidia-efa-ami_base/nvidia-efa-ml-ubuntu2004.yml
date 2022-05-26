@@ -95,7 +95,7 @@
       "echo ****DOWNLOAD ML REPOS****",
       "wget -O /tmp/cuda.pin https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin",
       "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
-      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub",
+      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub",
       "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /'",
       "sudo apt update",
       "echo ****INSTALL CUDA NCCL****",
