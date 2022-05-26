@@ -81,7 +81,7 @@
     "inline": [
       "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
       "cd /tmp/gdrcopy/packages",
-      "CUDA=/usr/local/cuda ./build-rpm-packages.sh",
+      "CUDA=/usr/local/cuda PATH=$PATH:/sbin ./build-rpm-packages.sh",
       "sudo rpm -Uvh *.rpm"]
     },
     {
