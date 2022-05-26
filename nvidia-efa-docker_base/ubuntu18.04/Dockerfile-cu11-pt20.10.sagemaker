@@ -32,6 +32,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y --allow-unauthenticated \
     gdb \
     automake \
     cmake \
+    devscripts \
+    debhelper \
+    libsubunit-dev \
+    check \
+    pkg-config \
     apt-utils && \
     DEBIAN_FRONTEND=noninteractive apt remove -y python3 && \
     DEBIAN_FRONTEND=noninteractive apt autoremove -y
@@ -52,6 +57,14 @@ RUN rm -rf /root/.ssh/ \
 ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/opt/amazon/openmpi/lib:/opt/nccl/build/lib:/opt/amazon/efa/lib:/opt/aws-ofi-nccl/install/lib:$LD_LIBRARY_PATH
 ENV PATH=/opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:/usr/bin:/usr/local/bin:$PATH
 
+#################################################
+## Install NVIDIA GDRCopy
+RUN git clone https://github.com/NVIDIA/gdrcopy.git $HOME/gdrcopy \
+    && cd $HOME/gdrcopy \
+    && make lib_install \
+    && cd $HOME/gdrcopy/tests \
+    && make \
+    && mv copylat copybw sanity apiperf /usr/bin/
 
 #################################################
 ## Install EFA installer

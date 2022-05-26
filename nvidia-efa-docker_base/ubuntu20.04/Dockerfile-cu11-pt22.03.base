@@ -33,7 +33,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated \
     cmake \
     python3-pip \
     python2-dev \
-    apt-utils
+    apt-utils \
+    devscripts \
+    debhelper \
+    libsubunit-dev \
+    check \
+    pkg-config
 
 RUN mkdir -p /var/run/sshd
 RUN sed -i 's/[ #]\(.*StrictHostKeyChecking \).*/ \1no/g' /etc/ssh/ssh_config && \
@@ -45,6 +50,15 @@ ENV PATH=/opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:/usr/bin:/usr/local/bin:$P
 RUN curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
     && python /tmp/get-pip.py \
     && pip install awscli pynvml
+
+#################################################
+## Install NVIDIA GDRCopy
+RUN git clone https://github.com/NVIDIA/gdrcopy.git $HOME/gdrcopy \
+    && cd $HOME/gdrcopy \
+    && make lib_install \
+    && cd $HOME/gdrcopy/tests \
+    && make \
+    && mv copylat copybw sanity apiperf /usr/bin/
 
 #################################################
 ## Install EFA installer

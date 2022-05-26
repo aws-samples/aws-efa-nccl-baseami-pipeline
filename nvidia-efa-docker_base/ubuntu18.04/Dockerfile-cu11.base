@@ -26,7 +26,12 @@ RUN apt-get install -y --allow-unauthenticated \
     automake \
     python3-dev \
     cmake \
-    apt-utils
+    apt-utils \
+    devscripts \
+    debhelper \
+    libsubunit-dev \
+    check \
+    pkg-config
 
 
 RUN mkdir -p /var/run/sshd
@@ -40,6 +45,15 @@ ENV PATH /opt/amazon/openmpi/bin/:/opt/amazon/efa/bin:/usr/bin:/usr/local/bin:$P
 RUN curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o /tmp/get-pip.py \
     && python3 /tmp/get-pip.py \
     && pip3 install awscli pynvml
+
+#################################################
+## Install NVIDIA GDRCopy
+RUN git clone https://github.com/NVIDIA/gdrcopy.git $HOME/gdrcopy \
+    && cd $HOME/gdrcopy \
+    && make lib_install \
+    && cd $HOME/gdrcopy/tests \
+    && make \
+    && mv copylat copybw sanity apiperf /usr/bin/
 
 #################################################
 ## Install EFA installer
