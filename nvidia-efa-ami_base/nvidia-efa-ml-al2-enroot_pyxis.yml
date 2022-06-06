@@ -10,7 +10,8 @@
     "nvidia_version": "510.47.03",
     "cuda_version": "cuda-toolkit-11-6",
     "cudnn_version": "libcudnn8",
-    "nccl_version": "v2.12.7-1"
+    "nccl_version": "v2.12.7-1",
+    "docker_image": "nvcr.io/nvidia/cuda:11.0.3-runtime-ubuntu18.04"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -123,7 +124,7 @@
       "echo -e '{\"default-ulimits\":{\"memlock\":{\"Name\":\"memlock\",\"Soft\":-1,\"Hard\":-1}},\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",
       "sudo systemctl restart docker",
       "sudo usermod -aG docker ec2-user",
-      "sudo docker pull nvcr.io/nvidia/cuda:11.0.3-runtime-ubuntu18.04"]
+      "sudo docker pull {{user `docker_image`}}"]
     },
     {
     "type": "shell",
