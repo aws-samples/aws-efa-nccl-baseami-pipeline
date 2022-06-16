@@ -40,7 +40,7 @@
     "inline": [
       "sudo  yum update -y",
       "sudo amazon-linux-extras install lustre2.10 epel kernel-5.10 -y",
-      "sudo yum install amazon-cloudwatch-agent python3 yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python3-distutils wget kernel-devel kernel-headers -y",
+      "sudo yum install amazon-cloudwatch-agent python3 yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python3-distutils wget kernel-devel kernel-headers check check-devel subunit subunit-devel -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && sudo python3 /tmp/get-pip.py",
       "uname -r",
