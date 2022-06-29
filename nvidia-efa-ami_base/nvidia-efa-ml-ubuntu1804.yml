@@ -93,12 +93,9 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "echo ****DOWNLOAD ML REPOS****",
-      "sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub",
-      "wget -O /tmp/deeplearning.deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb",
-      "sudo dpkg -i /tmp/deeplearning.deb",
       "wget -O /tmp/cuda.pin https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin",
       "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
-      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub",
+      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub",
       "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /'",
       "sudo apt update",
       "echo ****INSTALL CUDA NCCL****",
@@ -134,9 +131,8 @@
     "inline_shebang": "/bin/bash -xe",
     "inline": [
       "cd /opt",
-      "sudo git clone https://github.com/NVIDIA/nccl.git",
+      "sudo git clone https://github.com/NVIDIA/nccl.git -b {{user `nccl_version`}}",
       "cd nccl",
-      "sudo git checkout {{user `nccl_version`}}",
       "sudo make -j src.build CUDA_HOME=/usr/local/cuda NVCC_GENCODE='-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80'",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/nccl/build/lib\nexport NCCL_PROTO=simple' | sudo tee /etc/profile.d/nccl.sh && sudo chmod +x /etc/profile.d/nccl.sh"]
     },
