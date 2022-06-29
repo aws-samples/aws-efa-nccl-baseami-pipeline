@@ -104,7 +104,9 @@
       "echo ****SET ENVIRONMENT****",
       "sudo systemctl enable nvidia-fabricmanager.service",
       "sudo apt-mark hold nvidia* linux-aws linux-headers-aws linux-image-aws",
-      "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades"],
+      "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades",
+      "sudo echo 'options nvidia NVreg_EnableGpuFirmware=0' > /etc/modprobe.d/nvidia-gsp.conf",
+      "sudo update-initramfs -u"],
     "pause_before":"20s"
     },
     {
