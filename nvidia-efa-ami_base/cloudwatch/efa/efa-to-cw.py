@@ -25,10 +25,22 @@ sleep_interval = 10
 store_reso = 1
 
 ### INSTANCE INFO
+#### Support IMDS-v2
+def send_request(url, header, method):
+    req = urllib.request.Request(url, headers=header, method=method)
+    with urllib.request.urlopen(req) as f:
+        response = f.read().decode('utf8')
+    return response
+
+HEADER = {'X-aws-ec2-metadata-token-ttl-seconds' : '21600'}
+TOKEN = send_request('http://169.254.169.254/latest/api/token', HEADER, 'PUT')
+
+HEADER = {'X-aws-ec2-metadata-token' : TOKEN}
+
 BASE_URL = 'http://169.254.169.254/latest/meta-data/'
-INSTANCE_ID = urllib.request.urlopen(BASE_URL + 'instance-id').read().decode('utf8')
-INSTANCE_TYPE = urllib.request.urlopen(BASE_URL + 'instance-type').read().decode('utf8')
-INSTANCE_AZ = urllib.request.urlopen(BASE_URL + 'placement/availability-zone').read().decode('utf8')
+INSTANCE_ID = send_request(BASE_URL + 'instance-id', HEADER, 'GET')
+INSTANCE_TYPE = send_request(BASE_URL + 'instance-type', HEADER, 'GET')
+INSTANCE_AZ = send_request(BASE_URL + 'placement/availability-zone', HEADER, 'GET')
 print(INSTANCE_AZ)
 EC2_REGION = INSTANCE_AZ[:-1]
 
