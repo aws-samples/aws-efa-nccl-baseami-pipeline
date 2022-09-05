@@ -1,6 +1,7 @@
 ## AWS EFA and NCCL Base AMI/Docker Build Pipeline
 ### Amazon Linux 2022 Status
-included in [nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml](https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml) is a beta for NVIDIA GPU support in AL2022
+included in [nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml](https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml) is a beta for NVIDIA GPU support in AL2022.
+Can be used to work with container workloads on EC2.
 - [X] NVIDIA Driver install path
 - [X] CUDA install path
 - [X] nvidia-docker install path (working nvidia-container-toolkit)
