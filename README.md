@@ -3,7 +3,7 @@
 included in nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml is a beta for NVIDIA GPU support in AL2022
 - [X] NVIDIA Driver install path
 - [X] CUDA install path
-- [?] nvidia-docker install path (working nvidia-container-toolkit)
+- [-] nvidia-docker install path (working nvidia-container-toolkit)
 - [ ] GDRCopy
 - [ ] EFA/GDR support
 - [ ] FSx support
