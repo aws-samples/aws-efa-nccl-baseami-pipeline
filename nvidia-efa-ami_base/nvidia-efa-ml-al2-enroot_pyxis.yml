@@ -22,13 +22,13 @@
     },
     "subnet_id": "{{user `subnet_id`}}",
     "security_group_ids": "{{user `security_groupids`}}",
-    "instance_type":"g5.12xlarge",
+    "instance_type":"g4dn.8xlarge",
     "ssh_username": "ec2-user",
     "ami_name": "aws_{{user `flag`}}_{{user `nvidia_version`}}-{{timestamp}}",
     "launch_block_device_mappings":[{
       "delete_on_termination": true,
       "device_name": "/dev/xvda",
-      "volume_size": 100,
+      "volume_size": 200,
       "throughput": 1000,
       "iops": 10000,
       "volume_type": "gp3"
@@ -99,7 +99,7 @@
       "sudo mv /usr/systemd/nvidia-fabricmanager.service /usr/lib/systemd/system",
       "sudo systemctl enable nvidia-fabricmanager",
       "sudo yum -y install {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
-      "sudo echo 'options nvidia NVreg_EnableGpuFirmware=0' > /etc/modprobe.d/nvidia-gsp.conf",
+      "echo -e 'options nvidia NVreg_EnableGpuFirmware=0' | sudo tee /etc/modprobe.d/nvidia-gsp.conf",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "sudo chmod +x /etc/rc.local"]
     },
@@ -184,7 +184,10 @@
       "sudo mkdir /scratch && sudo chmod -R 777 /scratch",
       "git clone https://github.com/NVIDIA/pyxis.git /tmp/pyxis",
       "cd /tmp/pyxis && sudo make rpm && sudo rpm -ihv *.rpm",
-      "sudo mv /tmp/enroot.conf /etc/enroot/enroot.conf"]
+      "sudo mv /tmp/enroot.conf /etc/enroot/enroot.conf",
+      "sudo mkdir -p /opt/slurm/etc/plugstack.conf.d",
+      "echo -e 'include /opt/slurm/etc/plugstack.conf.d/*' | sudo tee /opt/slurm/etc/plugstack.conf",
+      "sudo ln -s -f /usr/share/pyxis/pyxis.conf /opt/slurm/etc/plugstack.conf.d/pyxis.conf"]
     },
     {
     "type": "shell",
