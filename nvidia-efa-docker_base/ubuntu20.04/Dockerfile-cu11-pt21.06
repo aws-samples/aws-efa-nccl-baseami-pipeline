@@ -4,7 +4,7 @@ FROM nvcr.io/nvidia/pytorch:21.06-py3
 ARG EFA_INSTALLER_VERSION=latest
 ARG AWS_OFI_NCCL_VERSION=aws
 ARG NCCL_TESTS_VERSION=master
-ARG NCCL_VERSION=v2.10.12-1
+ARG NCCL_VERSION=2.10.12-1
 
 RUN apt-get update -y
 RUN apt-get remove -y --allow-change-held-packages \
@@ -71,7 +71,7 @@ RUN cd $HOME \
 
 ###################################################
 ## Install NCCL
-RUN git clone https://github.com/NVIDIA/nccl -b ${NCCL_VERSION} /opt/nccl \
+RUN git clone https://github.com/NVIDIA/nccl -b v${NCCL_VERSION} /opt/nccl \
     && cd /opt/nccl \
     && make -j src.build CUDA_HOME=/usr/local/cuda \
     NVCC_GENCODE="-gencode=arch=compute_86,code=sm_86 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_60,code=sm_60"
