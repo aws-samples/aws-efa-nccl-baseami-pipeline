@@ -4,7 +4,9 @@ FROM nvcr.io/nvidia/cuda:11.5.2-cudnn8-devel-ubuntu20.04
 ARG EFA_INSTALLER_VERSION=latest
 ARG AWS_OFI_NCCL_VERSION=aws
 ARG NCCL_TESTS_VERSION=master
-ARG NCCL_VERSION=2.10.12-1
+# Optimizations here are in NCCL w/ Dynamic Buffer Depth PR: https://github.com/NVIDIA/nccl/pull/691
+# So we will set the NCCL version statically
+#ARG NCCL_VERSION=2.10.12-1
 
 RUN apt-get update -y
 RUN apt-get remove -y --allow-change-held-packages \
@@ -65,8 +67,9 @@ RUN cd $HOME \
 
 ###################################################
 ## Install NCCL
-RUN git clone https://github.com/NVIDIA/nccl -b v${NCCL_VERSION} /opt/nccl \
+RUN git clone https://github.com/NVIDIA/nccl -b v2.12.12-1 /opt/nccl \
     && cd /opt/nccl \
+    && git pull origin pull/691/head \
     && make -j src.build CUDA_HOME=/usr/local/cuda \
     NVCC_GENCODE="-gencode=arch=compute_86,code=sm_86 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_60,code=sm_60"
 
