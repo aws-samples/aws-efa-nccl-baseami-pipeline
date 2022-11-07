@@ -1,0 +1,18 @@
+FROM public.ecr.aws/w6p6i9i7/aws-efa-nccl-rdma:22.08-pt-py3
+
+RUN /opt/conda/bin/pip3 install git+https://github.com/facebookresearch/fairscale.git@main
+RUN git clone https://github.com/pytorch/fairseq.git && \
+    cd fairseq && \
+    sed -i '/"torch>=1.10"/d' setup.py && \
+    sed -i '/"torchaudio>=0.8.0"/d' setup.py && \
+    /opt/conda/bin/pip3 install -e ./
+RUN /opt/conda/bin/pip3 install deepspeed pyarrow
+
+RUN /opt/conda/bin/pip3 uninstall apex -y && \
+    git clone https://github.com/NVIDIA/apex && \
+    cd apex && \
+    /opt/conda/bin/pip3 install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" \
+        --global-option="--deprecated_fused_adam" --global-option="--xentropy" \
+        --global-option="--fast_multihead_attn" ./
+
+ADD cpu_adam.py /workspace/fairseq/fairseq/optim/cpu_adam.py
