@@ -179,9 +179,10 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "sudo wget -O /tmp/slurm-devel.rpm ",
-      "sudo wget -O /tmp/slurm.rpm ",
-      "sudo yum install -y jq squashfs-tools parallel fuse-overlayfs libnvidia-container-tools pigz squashfuse slurm-devel",
+      "sudo wget -O /tmp/slurm-devel.rpm https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/slurm/slurm-devel-22.05.6-1.amzn2.x86_64.rpm",
+      "sudo wget -O /tmp/slurm.rpm https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/slurm/slurm-22.05.6-1.amzn2.x86_64.rpm",
+      "cd /tmp && sudo yum localinstall -y /tmp/slurm-devel.rpm /tmp/slurm.rpm",
+      "sudo yum install -y jq squashfs-tools parallel fuse-overlayfs libnvidia-container-tools pigz squashfuse",
       "export arch=$(uname -m) && sudo -E yum install -y https://github.com/NVIDIA/enroot/releases/download/v3.4.0/enroot-3.4.0-2.el7.${arch}.rpm",
       "export arch=$(uname -m) && sudo -E yum install -y https://github.com/NVIDIA/enroot/releases/download/v3.4.0/enroot+caps-3.4.0-2.el7.${arch}.rpm",
       "sudo mkdir /scratch && sudo chmod -R 777 /scratch",
