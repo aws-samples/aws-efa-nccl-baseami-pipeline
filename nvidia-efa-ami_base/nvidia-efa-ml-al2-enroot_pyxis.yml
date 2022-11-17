@@ -11,7 +11,8 @@
     "cuda_version": "cuda-toolkit-11-6",
     "cudnn_version": "libcudnn8",
     "nccl_version": "v2.12.7-1",
-    "docker_image": "nvcr.io/nvidia/cuda:11.0.3-runtime-ubuntu18.04"
+    "docker_image": "nvcr.io/nvidia/cuda:11.0.3-runtime-ubuntu18.04",
+    "slurm_version" : "22.05.6"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -178,6 +179,8 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
+      "sudo wget -O /tmp/slurm-devel.rpm ",
+      "sudo wget -O /tmp/slurm.rpm ",
       "sudo yum install -y jq squashfs-tools parallel fuse-overlayfs libnvidia-container-tools pigz squashfuse slurm-devel",
       "export arch=$(uname -m) && sudo -E yum install -y https://github.com/NVIDIA/enroot/releases/download/v3.4.0/enroot-3.4.0-2.el7.${arch}.rpm",
       "export arch=$(uname -m) && sudo -E yum install -y https://github.com/NVIDIA/enroot/releases/download/v3.4.0/enroot+caps-3.4.0-2.el7.${arch}.rpm",
