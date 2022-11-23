@@ -9,7 +9,14 @@ RUN apt-get update -y
 RUN apt-get remove -y --allow-change-held-packages \
                       libmlx5-1 ibverbs-utils libibverbs-dev libibverbs1 \
                       libnccl2 libnccl-dev
-                      
+
+RUN rm -rf /opt/hpcx \
+    && rm -rf /usr/local/mpi \
+    && rm -rf /usr/local/ucx \
+    && rm -f /etc/ld.so.conf.d/hpcx.conf \
+    && ldconfig
+ENV OPAL_PREFIX=
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated \
     git \
     gcc \
@@ -72,7 +79,8 @@ RUN git clone https://github.com/NVIDIA/nccl -b v${NCCL_VERSION}-1 /opt/nccl \
 
 ###################################################
 ## Install AWS-OFI-NCCL plugin
-RUN git clone https://github.com/aws/aws-ofi-nccl.git /opt/aws-ofi-nccl \
+RUN export OPAL_PREFIX="" \
+    && git clone https://github.com/aws/aws-ofi-nccl.git /opt/aws-ofi-nccl \
     && cd /opt/aws-ofi-nccl \
     && git checkout ${AWS_OFI_NCCL_VERSION} \
     && ./autogen.sh \
