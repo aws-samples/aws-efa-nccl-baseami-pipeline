@@ -13,8 +13,8 @@ The base EFA/NCCL Base AMI can help you quickly get started with running distrib
 Included are sample buildspecs which you integrate with a CodeBuild/CodePipeline for automatic builds.
 These scripts can be used as examples for both AL2 and Ubuntu 18.04 the following stack is installed. The docker build file is an example implentation of the requirements to setup EFA/NCCL in a container context for ECS/Batch/EKS.
 
-- NVIDIA Driver 510.xx*
-- CUDA 11.6
+- NVIDIA Driver 515.xx*
+- CUDA 11.7
 - NVIDIA Fabric Manager (version locked to the nvidia driver)
 - cuDNN 8
 - NCCL 2.12.7
