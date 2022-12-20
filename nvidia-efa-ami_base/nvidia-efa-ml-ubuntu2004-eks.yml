@@ -1,10 +1,10 @@
 {
   "variables": {
     "region": "us-east-1",
-    "flag": "ubuntu2004-base",
+    "flag": "ubuntu2004-eks1.23",
     "subnet_id": "subnet-baff22e5",
     "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
-    "build_ami": "ami-04505e74c0741db8d",
+    "build_ami": "ami-0f89411984ff168ca",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
     "nvidia_version": "cuda-drivers-fabricmanager-520",
@@ -47,7 +47,6 @@
       "sudo apt update",
       "sudo systemctl disable unattended-upgrades.service",
       "sudo systemctl disable ondemand.service",
-      "sudo ufw disable",
       "sudo shutdown -r now"]
     },
     {
@@ -61,9 +60,7 @@
     "type": "shell",
     "inline": [
       "uname -r",
-      "wget -O /tmp/awscli2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
-      "cd /tmp && sudo unzip /tmp/awscli2.zip",
-      "sudo /tmp/aws/install",
+      "sudo pip3 install --upgrade awscli",
       "aws configure set default.s3.max_concurrent_requests 100",
       "aws configure set default.s3.max_queue_size 10000",
       "aws configure set default.s3.multipart_threshold 64MB",
@@ -99,10 +96,10 @@
       "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /'",
       "sudo apt update",
       "echo ****INSTALL CUDA NCCL****",
-      "sudo apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} datacenter-gpu-manager -y",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} -y",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
       "echo ****SET ENVIRONMENT****",
-      "sudo systemctl enable nvidia-fabricmanager nvidia-dcgm",
+      "sudo systemctl enable nvidia-fabricmanager.service",
       "sudo apt-mark hold nvidia* linux-aws linux-headers-aws linux-image-aws",
       "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades",
       "echo -e 'options nvidia NVreg_EnableGpuFirmware=0' | sudo tee /etc/modprobe.d/nvidia-gsp.conf",
@@ -187,9 +184,10 @@
     "type": "shell",
     "inline_shebang": "/bin/bash -xe",
     "inline": [
-      "wget -O /tmp/aws-ubuntu-eni-helper.deb 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/networking/aws-ubuntu-eni-helper_0.3-1_all.deb?raw=true'",
-      "sudo apt install /tmp/aws-ubuntu-eni-helper.deb -y",
-      "sudo systemctl enable aws-ubuntu-eni-helper.service"]
+      "sudo wget -O '/tmp/bootstrap.helper.sh' https://raw.githubusercontent.com/weaveworks/eksctl/main/pkg/nodebootstrap/assets/scripts/bootstrap.helper.sh",
+      "sudo wget -O '/tmp/bootstrap.ubuntu.sh' https://raw.githubusercontent.com/weaveworks/eksctl/main/pkg/nodebootstrap/assets/scripts/bootstrap.ubuntu.sh",
+      "sudo mkdir -p /var/lib/cloud/scripts/eksctl && sudo cp /tmp/bootstrap.* /var/lib/cloud/scripts/eksctl && sudo chmod +x /var/lib/cloud/scripts/eksctl/*.sh",
+      "sudo mkdir -p /etc/eksctl && echo '{}' | sudo tee /etc/eksctl/kubelet-extra.json"]
     },
     {
     "type": "shell",
