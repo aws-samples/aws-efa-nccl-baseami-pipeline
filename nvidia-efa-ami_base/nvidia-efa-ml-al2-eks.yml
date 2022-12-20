@@ -7,8 +7,8 @@
     "build_ami": "ami-0c9424a408e18bcc9",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "525.60.13",
-    "cuda_version": "cuda-toolkit-11-8",
+    "nvidia_version": "515.86.01",
+    "cuda_version": "cuda-toolkit-11-7",
     "nccl_version": "v2.12.7-1"
   },
   "builders": [{
@@ -38,7 +38,7 @@
     "inline": [
       "sudo  yum update -y",
       "sudo amazon-linux-extras install lustre2.10 epel -y",
-      "sudo yum install rsync yum-utils cmake sipcalc dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel kernel-headers -y",
+      "sudo yum install rsync yum-utils cmake sipcalc dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python2-pip python3-pip wget kernel-devel kernel-headers check check-devel subunit subunit-devel -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "uname -r",
       "echo 'blacklist nouveau' | sudo tee /etc/modprobe.d/nvidia-graphics-drivers.conf",
@@ -63,6 +63,7 @@
       "sudo yum install gcc10 kernel-devel kernel-headers -y",
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
       "sudo yum clean all",
+      "sudo sed -i '/^\\[main\\]/a\\exclude=kernel*' /etc/yum.conf",
       "sudo wget -O /tmp/NVIDIA-Linux-driver.run 'https://us.download.nvidia.com/tesla/{{user `nvidia_version`}}/NVIDIA-Linux-x86_64-{{user `nvidia_version`}}.run'",
       "sudo CC=gcc10-cc sh /tmp/NVIDIA-Linux-driver.run -q -a --ui=none",
       "sudo curl -O https://developer.download.nvidia.com/compute/nvidia-driver/redist/fabricmanager/linux-x86_64/fabricmanager-linux-x86_64-{{user `nvidia_version`}}-archive.tar.xz",
@@ -71,8 +72,18 @@
       "sudo mv /usr/systemd/nvidia-fabricmanager.service /usr/lib/systemd/system",
       "sudo systemctl enable nvidia-fabricmanager",
       "sudo yum -y install {{user `cuda_version`}}",
+      "echo -e 'options nvidia NVreg_EnableGpuFirmware=0' | sudo tee /etc/modprobe.d/nvidia-gsp.conf",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "sudo chmod +x /etc/rc.local"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda PATH=$PATH:/sbin ./build-rpm-packages.sh",
+      "sudo rpm -Uvh *.rpm"]
     },
     {
     "type": "shell",

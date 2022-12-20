@@ -1,10 +1,20 @@
 ## AWS EFA and NCCL Base AMI/Docker Build Pipeline
+### Amazon Linux 2022 Status
+included in [nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml](https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/blob/master/nvidia-efa-ami_base/nvidia-efa-ml-al2022.yml) is a beta for NVIDIA GPU support in AL2022.
+Can be used with container workloads on EC2.
+- [X] NVIDIA Driver install path
+- [X] CUDA install path
+- [X] nvidia-docker install path (working nvidia-container-toolkit)
+- [ ] GDRCopy
+- [ ] EFA/GDR support
+- [ ] FSx support
+
 The base EFA/NCCL Base AMI can help you quickly get started with running distributed training workloads on AWS with our EFA enabled instances (p3dn, g4dn, and p4d)
 Included are sample buildspecs which you integrate with a CodeBuild/CodePipeline for automatic builds.
 These scripts can be used as examples for both AL2 and Ubuntu 18.04 the following stack is installed. The docker build file is an example implentation of the requirements to setup EFA/NCCL in a container context for ECS/Batch/EKS.
 
-- NVIDIA Driver 510.xx*
-- CUDA 11.6
+- NVIDIA Driver 515.xx*
+- CUDA 11.7
 - NVIDIA Fabric Manager (version locked to the nvidia driver)
 - cuDNN 8
 - NCCL 2.12.7

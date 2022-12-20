@@ -1,0 +1,8 @@
+
+FROM public.ecr.aws/w6p6i9i7/aws-efa-nccl-rdma:21.11-pt-py3
+
+###################################################
+## Install Facebook PARAM
+RUN git clone https://github.com/facebookresearch/param.git /workspace/param
+ADD gpu-nccl-sanity.sh /workspace/gpu-nccl-sanity.sh
+RUN chmod +x /workspace/gpu-nccl-sanity.sh

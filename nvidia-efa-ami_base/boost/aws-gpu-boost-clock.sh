@@ -11,8 +11,10 @@ sudo nvidia-smi --auto-boost-default=0
 GPUNAME=$(nvidia-smi -L | head -n1)
 echo $GPUNAME
 
-if [[ $GPUNAME == *"A100"* ]]; then
+if [[ $GPUNAME == *"A100-SXM4-40GB"* ]]; then
    nvidia-smi -ac 1215,1410
+elif [[ $GPUNAME == *"A100-SXM4-80GB"* ]]; then
+   nvidia-smi -ac 1593,1410
 elif [[ $GPUNAME == *"V100"* ]]; then
    nvidia-smi -ac 877,1530
 elif [[ $GPUNAME == *"K80"* ]]; then

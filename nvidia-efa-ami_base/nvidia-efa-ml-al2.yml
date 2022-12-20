@@ -7,7 +7,7 @@
     "build_ami": "ami-02354e95b39ca8dec",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "510.47.03",
+    "nvidia_version": "515.86.01",
     "cuda_version": "cuda-toolkit-11-6",
     "cudnn_version": "libcudnn8",
     "nccl_version": "v2.12.7-1"
@@ -39,7 +39,7 @@
     "inline": [
       "sudo  yum update -y",
       "sudo amazon-linux-extras install lustre2.10 epel kernel-5.10 -y",
-      "sudo yum install amazon-cloudwatch-agent python3 yum-utils cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python3-distutils wget kernel-devel kernel-headers -y",
+      "sudo yum install amazon-cloudwatch-agent python3 yum-utils ldconfig cmake dkms mdadm git htop hwloc iftop kernel-tools rpm-build rpmdevtools numactl parallel pigz python3-distutils wget kernel-devel kernel-headers make check check-devel subunit subunit-devel -y",
       "sudo yum groupinstall 'Development Tools' -y",
       "curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && sudo python3 /tmp/get-pip.py",
       "uname -r",
@@ -89,6 +89,7 @@
       "sudo yum install gcc10 kernel-devel kernel-headers -y",
       "sudo yum-config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo",
       "sudo yum clean all",
+      "sudo sed -i '/^\\[main\\]/a\\exclude=kernel*' /etc/yum.conf",
       "sudo wget -O /tmp/NVIDIA-Linux-driver.run 'https://us.download.nvidia.com/tesla/{{user `nvidia_version`}}/NVIDIA-Linux-x86_64-{{user `nvidia_version`}}.run'",
       "sudo CC=gcc10-cc sh /tmp/NVIDIA-Linux-driver.run -q -a --ui=none",
       "sudo curl -O https://developer.download.nvidia.com/compute/nvidia-driver/redist/fabricmanager/linux-x86_64/fabricmanager-linux-x86_64-{{user `nvidia_version`}}-archive.tar.xz",
@@ -97,6 +98,7 @@
       "sudo mv /usr/systemd/nvidia-fabricmanager.service /usr/lib/systemd/system",
       "sudo systemctl enable nvidia-fabricmanager",
       "sudo yum -y install {{user `cuda_version`}} {{user `cudnn_version`}} {{user `cudnn_version`}}-devel",
+      "echo -e 'options nvidia NVreg_EnableGpuFirmware=0' | sudo tee /etc/modprobe.d/nvidia-gsp.conf",
       "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh",
       "sudo chmod +x /etc/rc.local"]
     },
@@ -113,6 +115,15 @@
       "echo -e '{\"default-ulimits\":{\"memlock\":{\"Name\":\"memlock\",\"Soft\":-1,\"Hard\":-1}},\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",
       "sudo systemctl restart docker",
       "sudo usermod -aG docker ec2-user"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda PATH=$PATH:/sbin ./build-rpm-packages.sh",
+      "sudo rpm -Uvh *.rpm"]
     },
     {
     "type": "shell",

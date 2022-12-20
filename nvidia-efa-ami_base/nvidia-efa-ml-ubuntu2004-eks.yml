@@ -1,0 +1,225 @@
+{
+  "variables": {
+    "region": "us-east-1",
+    "flag": "ubuntu2004-eks1.23",
+    "subnet_id": "subnet-baff22e5",
+    "security_groupids": "sg-053996a563511a3c6,sg-050407dfb1c555723",
+    "build_ami": "ami-0f89411984ff168ca",
+    "efa_pkg": "aws-efa-installer-latest.tar.gz",
+    "intel_mkl_version": "intel-mkl-2020.0-088",
+    "nvidia_version": "cuda-drivers-fabricmanager-520",
+    "cuda_version": "cuda-toolkit-11-8 nvidia-gds-11-8",
+    "cudnn_version": "libcudnn8",
+    "nccl_version": "v2.12.7-1"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami": "{{user `build_ami`}}",
+    "run_tags": {
+        "Name": "packer-gpu-processor-{{user `flag`}}"
+    },
+    "subnet_id": "{{user `subnet_id`}}",
+    "security_group_ids": "{{user `security_groupids`}}",
+    "instance_type": "r5n.12xlarge",
+    "ssh_username": "ubuntu",
+    "ami_name": "aws_{{user `flag`}}_{{user `nvidia_version`}}-{{timestamp}}",
+    "launch_block_device_mappings":[{
+      "delete_on_termination": true,
+      "device_name": "/dev/sda1",
+      "volume_size": 100,
+      "throughput": 1000,
+      "iops": 10000,
+      "volume_type": "gp3"
+    }]
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "expect_disconnect": true,
+    "inline": [
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common linux-aws git libtool autoconf cmake nasm unzip python3 python3-distutils python3-wheel python3-dev python3-numpy pigz parallel nfs-common build-essential hwloc libjemalloc2 libnuma-dev numactl libjemalloc-dev preload htop iftop liblapack-dev libgfortran5 ipcalc wget curl devscripts debhelper check libsubunit-dev fakeroot pkg-config dkms",
+      "echo 'GRUB_CMDLINE_LINUX='intel_idle.max_cstate=1'' | sudo tee -a /etc/default/grub",
+      "curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && sudo python3 /tmp/get-pip.py",
+      "wget -O - https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc | sudo apt-key add -",
+      "echo 'deb https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu focal main' | sudo tee /etc/apt/sources.list.d/fsxlustreclientrepo.list",
+      "uname -r",
+      "sudo apt update",
+      "sudo systemctl disable unattended-upgrades.service",
+      "sudo systemctl disable ondemand.service",
+      "sudo shutdown -r now"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang":"/bin/bash -xe",
+    "inline": [
+      "uname -r",
+      "sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y lustre-client-modules-$(uname -r) lustre-client-modules-aws"]
+    },
+    {
+    "type": "shell",
+    "inline": [
+      "uname -r",
+      "sudo pip3 install --upgrade awscli",
+      "aws configure set default.s3.max_concurrent_requests 100",
+      "aws configure set default.s3.max_queue_size 10000",
+      "aws configure set default.s3.multipart_threshold 64MB",
+      "aws configure set default.s3.multipart_chunksize 16MB"]
+    },
+    {
+    "type": "shell",
+    "inline": [
+      "echo 'net.core.default_qdisc = fq' | sudo tee -a /etc/sysctl.conf",
+      "echo 'kernel.yama.ptrace_scope = 0' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_congestion_control = bbr' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_timestamps = 0' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.rmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.wmem_max = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_rmem = 4096 87380 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_wmem = 4096 65536 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.netdev_max_backlog = 30000' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.rmem_default = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.core.wmem_default = 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.tcp_mem = 67108864 67108864 67108864' | sudo tee -a /etc/sysctl.conf",
+      "echo 'net.ipv4.route.flush = 1' | sudo tee -a /etc/sysctl.conf",
+      "sudo sysctl -p"]
+    },
+    {
+    "type": "shell",
+    "expect_disconnect": true,
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "echo ****DOWNLOAD ML REPOS****",
+      "wget -O /tmp/cuda.pin https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin",
+      "sudo mv /tmp/cuda.pin /etc/apt/preferences.d/cuda-repository-pin-600",
+      "sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub",
+      "sudo add-apt-repository 'deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /'",
+      "sudo apt update",
+      "echo ****INSTALL CUDA NCCL****",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install -o Dpkg::Options::='--force-overwrite' {{user `nvidia_version`}} {{user `cuda_version`}} {{user `cudnn_version`}} -y",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64\nexport PATH=$PATH:/usr/local/cuda/bin' | sudo tee /etc/profile.d/cuda.sh && sudo chmod +x /etc/profile.d/cuda.sh",
+      "echo ****SET ENVIRONMENT****",
+      "sudo systemctl enable nvidia-fabricmanager.service",
+      "sudo apt-mark hold nvidia* linux-aws linux-headers-aws linux-image-aws",
+      "sudo sed -i '/Unattended/s/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades",
+      "echo -e 'options nvidia NVreg_EnableGpuFirmware=0' | sudo tee /etc/modprobe.d/nvidia-gsp.conf",
+      "sudo update-initramfs -u"],
+    "pause_before":"20s"
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/gdrcopy.git /tmp/gdrcopy",
+      "cd /tmp/gdrcopy/packages",
+      "CUDA=/usr/local/cuda ./build-deb-packages.sh",
+      "sudo dpkg -i *.deb"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "wget -O /tmp/aws-efa-installer.tar.gz https://efa-installer.amazonaws.com/{{user `efa_pkg`}}",
+      "tar -xf /tmp/aws-efa-installer.tar.gz -C /tmp",
+      "cd /tmp/aws-efa-installer",
+      "sudo ./efa_installer.sh -y -g",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/amazon/openmpi/lib:/opt/amazon/efa/lib\nexport PATH=$PATH:/opt/amazon/efa/bin:/opt/amazon/openmpi/bin' | sudo tee /etc/profile.d/amazon_efa.sh && sudo chmod +x /etc/profile.d/amazon_efa.sh"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "cd /opt",
+      "sudo git clone https://github.com/NVIDIA/nccl.git",
+      "cd nccl",
+      "sudo git checkout {{user `nccl_version`}}",
+      "sudo make -j src.build CUDA_HOME=/usr/local/cuda NVCC_GENCODE='-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80'",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/nccl/build/lib\nexport NCCL_PROTO=simple' | sudo tee /etc/profile.d/nccl.sh && sudo chmod +x /etc/profile.d/nccl.sh"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/aws/aws-ofi-nccl.git -b aws",
+      "cd aws-ofi-nccl",
+      "export PATH=$PATH:/opt/amazon/efa/bin:/opt/amazon/openmpi/bin",
+      "./autogen.sh",
+      "sudo mkdir -p /opt/aws-ofi-nccl",
+      "./configure --prefix=/opt/aws-ofi-nccl --with-mpi=/opt/amazon/openmpi --with-libfabric=/opt/amazon/efa --with-nccl=/opt/nccl/build --with-cuda=/usr/local/cuda",
+      "make && sudo make install",
+      "echo -e '#!/bin/sh\nexport LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/aws-ofi-nccl/lib' | sudo tee /etc/profile.d/aws-ofi-nccl.sh && sudo chmod +x /etc/profile.d/aws-ofi-nccl.sh" ]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "git clone https://github.com/NVIDIA/nccl-tests.git",
+      "cd nccl-tests",
+      "make MPI=1 MPI_HOME=/opt/amazon/openmpi CUDA_HOME=/usr/local/cuda NCCL_HOME=/opt/nccl/build"]
+    },    
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "echo '    StrictHostKeyChecking no' | sudo tee -a /etc/ssh/ssh_config",
+      "echo '    HostbasedAuthentication no' | sudo tee -a /etc/ssh/ssh_config",
+      "echo '    CheckHostIP no' | sudo tee -a /etc/ssh/ssh_config"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable'",
+      "distribution=$(. /etc/os-release;echo $ID$VERSION_ID)",
+      "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -",
+      "curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list",
+      "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io nvidia-container-toolkit nvidia-container-runtime",
+      "echo -e '{\"default-ulimits\":{\"memlock\":{\"Name\":\"memlock\",\"Soft\":-1,\"Hard\":-1}},\"default-runtime\":\"nvidia\",\"runtimes\":{\"nvidia\":{\"path\":\"nvidia-container-runtime\",\"runtimeArgs\":[]}}}' | sudo tee /etc/docker/daemon.json",
+      "sudo systemctl restart docker",
+      "sudo usermod -aG docker $USER"
+      ]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo wget -O '/tmp/bootstrap.helper.sh' https://raw.githubusercontent.com/weaveworks/eksctl/main/pkg/nodebootstrap/assets/scripts/bootstrap.helper.sh",
+      "sudo wget -O '/tmp/bootstrap.ubuntu.sh' https://raw.githubusercontent.com/weaveworks/eksctl/main/pkg/nodebootstrap/assets/scripts/bootstrap.ubuntu.sh",
+      "sudo mkdir -p /var/lib/cloud/scripts/eksctl && sudo cp /tmp/bootstrap.* /var/lib/cloud/scripts/eksctl && sudo chmod +x /var/lib/cloud/scripts/eksctl/*.sh",
+      "sudo mkdir -p /etc/eksctl && echo '{}' | sudo tee /etc/eksctl/kubelet-extra.json"]
+    },
+    {
+    "type": "shell",
+    "inline_shebang": "/bin/bash -xe",
+    "inline": [
+      "sudo /usr/local/bin/pip3 install boto3",
+      "sudo mkdir -p /opt/aws",
+      "sudo wget -O /tmp/cwa.deb 'https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb'",
+      "sudo dpkg -i /tmp/cwa.deb",
+      "git clone https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline.git /tmp/aws-efa-nccl-baseami",
+      "sudo mv /tmp/aws-efa-nccl-baseami/nvidia-efa-ami_base/cloudwatch /opt/aws/",
+      "sudo mv /opt/aws/cloudwatch/aws-hw-monitor.service /lib/systemd/system",
+      "echo -e '#!/bin/sh\n' | sudo tee /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/cloudwatch/nvidia/aws-hwaccel-event-parser.py &' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/cloudwatch/nvidia/accel-to-cw.py /opt/aws/cloudwatch/nvidia/nvidia-exporter >> /dev/null 2>&1 &\n' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "echo -e '/usr/bin/python3 /opt/aws/cloudwatch/efa/efa-to-cw.py /opt/aws/cloudwatch/efa/efa-exporter >> /dev/null 2>&1 &\n' | sudo tee -a /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "sudo chmod +x /opt/aws/cloudwatch/aws-cloudwatch-wrapper.sh",
+      "sudo cp /opt/aws/cloudwatch/nvidia/cwa-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s",
+      "sudo systemctl enable aws-hw-monitor.service",
+      "sudo systemctl restart amazon-cloudwatch-agent.service"]
+    },
+    {
+     "type": "shell",
+     "inline_shebang": "/bin/bash -xe",
+     "inline": [
+      "sudo mkdir -p /opt/aws",
+      "wget -O /tmp/aws-gpu-boost-clock.sh 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.sh'",
+      "wget -O /tmp/aws-gpu-boost-clock.service 'https://github.com/aws-samples/aws-efa-nccl-baseami-pipeline/raw/master/nvidia-efa-ami_base/boost/aws-gpu-boost-clock.service'",
+      "sudo mv /tmp/aws-gpu-boost-clock.sh /opt/aws/ && sudo chmod +x /opt/aws/aws-gpu-boost-clock.sh",
+      "sudo mv /tmp/aws-gpu-boost-clock.service /lib/systemd/system",
+      "sudo systemctl enable aws-gpu-boost-clock.service && sudo systemctl start aws-gpu-boost-clock.service"]
+    }
+  ]
+}
