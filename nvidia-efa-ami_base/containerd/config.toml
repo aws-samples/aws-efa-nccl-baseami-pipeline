@@ -1,0 +1,28 @@
+[grpc]
+address = "/run/containerd/containerd.sock"
+
+[plugins]
+
+[plugins.cri]
+sandbox_image = "602401143452.dkr.ecr.us-east-1.amazonaws.com/eks/pause:3.5"
+[plugins.cri.containerd]
+
+[plugins.cri.containerd.default_runtime]
+privileged_without_host_devices = false
+runtime_engine = ""
+runtime_root = ""
+runtime_type = "io.containerd.runtime.v1.linux"
+
+[plugins.cri.containerd.default_runtime.options]
+Runtime = "/usr/bin/nvidia-container-runtime"
+
+[plugins.cri.containerd.runtimes]
+
+[plugins.cri.containerd.runtimes.nvidia]
+privileged_without_host_devices = false
+runtime_engine = ""
+runtime_root = ""
+runtime_type = "io.containerd.runtime.v1.linux"
+
+[plugins.cri.containerd.runtimes.nvidia.options]
+Runtime = "/etc/docker-runtimes.d/nvidia"
