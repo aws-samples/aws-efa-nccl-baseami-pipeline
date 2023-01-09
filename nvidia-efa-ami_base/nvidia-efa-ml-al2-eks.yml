@@ -7,9 +7,9 @@
     "build_ami": "ami-0c9424a408e18bcc9",
     "efa_pkg": "aws-efa-installer-latest.tar.gz",
     "intel_mkl_version": "intel-mkl-2020.0-088",
-    "nvidia_version": "515.86.01",
-    "cuda_version": "cuda-toolkit-11-7",
-    "nccl_version": "v2.12.7-1"
+    "nvidia_version": "525.60.13",
+    "cuda_version": "cuda-toolkit-11-8",
+    "nccl_version": "v2.16.2-1"
   },
   "builders": [{
     "type": "amazon-ebs",
